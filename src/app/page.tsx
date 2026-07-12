@@ -1,4 +1,4 @@
-import { getProjects } from '@/lib/contentful';
+import { getProjects, getExperiences } from '@/lib/contentful';
 import ClientEffects from '@/components/ClientEffects';
 
 // ─── Static data (Skills & Experience) ───────────────────────────────────────
@@ -67,26 +67,7 @@ const skills = [
   },
 ];
 
-const experiences = [
-  {
-    id: '1',
-    dateRange: '2024 - Now',
-    title: 'PPLG Student',
-    company: 'SMKN 2 Banjarmasin',
-    description:
-      'Studying software engineering and UI/UX design fundamentals, building projects using Figma, Tailwind CSS, and Laravel.',
-    tags: ['Figma', 'Tailwind CSS', 'Laravel', 'UI/UX'],
-  },
-  {
-    id: '2',
-    dateRange: '2025 - 2026',
-    title: 'UI/UX Design',
-    company: 'Modulia',
-    description:
-      'Focusing on User Experiences and Interfaces for Exam Platform',
-    tags: ['Figma', 'UI/UX'],
-  },
-];
+
 
 
 const marqueeItems = [
@@ -100,6 +81,7 @@ export const revalidate = 60;
 export default async function PortfolioPage() {
   // Fetch projects on the server before the page renders
   const projects = await getProjects();
+  const experiences = await getExperiences();
 
   const dynamicStats = [
     { target: 1, label: 'Year Learning' },

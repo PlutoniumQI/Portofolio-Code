@@ -16,6 +16,15 @@ export interface Project {
   status: string;
 }
 
+export interface Experience {
+  id: string;
+  dateRange: string;
+  title: string;
+  company: string;
+  description: string;
+  tags: string[];
+}
+
 // A helper function to fetch portfolio projects from the CMS
 export async function getProjects(): Promise<Project[]> {
   try {
@@ -39,3 +48,27 @@ export async function getProjects(): Promise<Project[]> {
     return [];
   }
 }
+
+// A helper function to fetch portfolio experiences from the CMS
+export async function getExperiences(): Promise<Experience[]> {
+  try {
+    // Fetches all entries matching the 'portfolioExperience' content type
+    const response = await client.getEntries({
+      content_type: 'portfolioExperience',
+      order: ['sys.createdAt'], // Order from oldest to newest (or order custom if needed)
+    });
+
+    return response.items.map((item: any) => ({
+      id: item.sys.id,
+      dateRange: (item.fields.dateRange as string) || '',
+      title: (item.fields.title as string) || '',
+      company: (item.fields.company as string) || '',
+      description: (item.fields.description as string) || '',
+      tags: (item.fields.tags as string[]) || [],
+    }));
+  } catch (error) {
+    console.error('Error fetching experiences from Contentful:', error);
+    return [];
+  }
+}
+

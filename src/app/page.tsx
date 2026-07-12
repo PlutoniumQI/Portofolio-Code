@@ -83,8 +83,9 @@ const experiences = [
     title: 'UI/UX Design',
     company: 'Modulia',
     description:
-      'Focusing on User Experiences and Interfaces for Exam Platform'
+      'Focusing on User Experiences and Interfaces for Exam Platform',
     tags: ['Figma', 'UI/UX'],
+  },
 ];
 
 

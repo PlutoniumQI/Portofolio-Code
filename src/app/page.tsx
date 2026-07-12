@@ -90,7 +90,8 @@ const marqueeItems = [
 ];
 const allMarqueeItems = [...marqueeItems, ...marqueeItems];
 
-// ─── Page Component ───────────────────────────────────────────────────────────
+// Enable automatic background revalidation of the static page (ISR) every 60 seconds
+export const revalidate = 60;
 
 export default async function PortfolioPage() {
   // Fetch projects on the server before the page renders

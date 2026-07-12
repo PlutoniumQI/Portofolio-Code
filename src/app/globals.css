@@ -1,0 +1,278 @@
+@import "tailwindcss";
+
+/* ─── FONTS ──────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@theme inline {
+  --font-sans: 'Inter', ui-sans-serif, system-ui;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+/* ─── GLOBAL ─────────────────────────────────────────── */
+::selection {
+  background: rgba(16, 185, 129, 0.25);
+  color: #fff;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #09090b;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46;
+}
+
+/* Dot grid pattern */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Noise / grain overlay */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  opacity: 0.018;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ─── CURSOR GLOW ────────────────────────────────────── */
+#glow {
+  position: fixed;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.04) 0%, rgba(255, 255, 255, 0.02) 30%, transparent 70%);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: left 0.15s ease, top 0.15s ease;
+  z-index: 0;
+}
+
+/* ─── TYPEWRITER CURSOR ──────────────────────────────── */
+#tw::after {
+  content: '|';
+  animation: blink 1s step-end infinite;
+  color: #10b981;
+  opacity: 0.7;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 0; }
+}
+
+/* ─── FLOATING ANIMATION ─────────────────────────────── */
+@keyframes fl {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+
+.fl  { animation: fl 5s ease-in-out infinite; }
+.fl2 { animation: fl 7s 1.5s ease-in-out infinite; }
+.fl3 { animation: fl 6s 0.7s ease-in-out infinite; }
+
+/* ─── MARQUEE ────────────────────────────────────────── */
+@keyframes mq {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.mq { animation: mq 28s linear infinite; }
+
+/* ─── GRADIENT ORB (Hero) ────────────────────────────── */
+@keyframes orbFloat {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  33%       { transform: translate(-45%, -55%) scale(1.05); }
+  66%       { transform: translate(-55%, -45%) scale(0.95); }
+}
+
+.hero-orb {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, rgba(6, 78, 59, 0.04) 40%, transparent 70%);
+  filter: blur(60px);
+  animation: orbFloat 12s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* ─── HOVER FADE (Brittany Chiang style) ─────────────── */
+.hover-fade-group:hover .hover-fade-item {
+  opacity: 0.35;
+}
+
+.hover-fade-group .hover-fade-item {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.hover-fade-group .hover-fade-item:hover {
+  opacity: 1 !important;
+}
+
+/* ─── PROJECT CARD GLOW ──────────────────────────────── */
+.project-card-glow {
+  position: relative;
+  overflow: hidden;
+}
+
+.project-card-glow::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 1rem;
+  opacity: 0;
+  background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(16, 185, 129, 0.06), transparent 40%);
+  transition: opacity 0.3s ease;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.project-card-glow:hover::before {
+  opacity: 1;
+}
+
+/* ─── GLASS CARD ─────────────────────────────────────── */
+.glass-card {
+  background: rgba(24, 24, 27, 0.5);
+  border: 1px solid rgba(63, 63, 70, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* ─── SHIMMER BUTTON ─────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.btn-shimmer {
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.06) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+/* ─── GRADIENT BORDER ────────────────────────────────── */
+.gradient-border-ring {
+  background: conic-gradient(from 0deg, #10b981, #059669, #047857, #065f46, #10b981);
+  padding: 2px;
+  border-radius: 9999px;
+}
+
+/* ─── EXPERIENCE TIMELINE ────────────────────────────── */
+.exp-item {
+  position: relative;
+}
+
+.exp-item::before {
+  content: '';
+  position: absolute;
+  left: 79px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, rgb(63 63 70) 20%, rgb(63 63 70) 80%, transparent);
+}
+
+.exp-item:last-child::before {
+  display: none;
+}
+
+/* ─── SCROLL INDICATOR ───────────────────────────────── */
+@keyframes scrollBounce {
+  0%, 100% { transform: translateY(0); opacity: 0.4; }
+  50%       { transform: translateY(8px); opacity: 0.8; }
+}
+
+.scroll-indicator {
+  animation: scrollBounce 2s ease-in-out infinite;
+}
+
+/* ─── BACK TO TOP ────────────────────────────────────── */
+#backToTop {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#backToTop.show {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+/* ─── MOBILE MENU ────────────────────────────────────── */
+#mobileMenu {
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+#mobileMenu.open {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+#mobileMenu a {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+#mobileMenu.open a {
+  transform: translateY(0) !important;
+  opacity: 1 !important;
+}
+
+/* ─── SKILL CARD ─────────────────────────────────────── */
+.skill-card {
+  transition: all 0.3s ease;
+}
+
+.skill-card:hover {
+  border-color: rgba(16, 185, 129, 0.3);
+  background: rgba(16, 185, 129, 0.03);
+  transform: translateY(-2px);
+}
+
+.skill-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  width: 60%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #10b981, transparent);
+  transition: transform 0.3s ease;
+  border-radius: 1px;
+}
+
+.skill-card:hover::after {
+  transform: translateX(-50%) scaleX(1);
+}
+
+/* ─── REVEAL ─────────────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(2rem);
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}

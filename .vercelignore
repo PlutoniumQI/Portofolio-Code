@@ -1,9 +1,0 @@
-/vendor
-/node_modules
-/bootstrap/cache/*
-/storage/*.key
-.env
-.env.*
-.git
-.github
-.vercel

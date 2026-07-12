@@ -79,11 +79,6 @@ const experiences = [
   },
 ];
 
-const stats = [
-  { target: 1, label: 'Year Learning' },
-  { target: 3, label: 'Projects Built' },
-  { target: 5, label: 'Tools Mastered' },
-];
 
 const marqueeItems = [
   'UI/UX Design', 'Front-end Dev', 'Figma', 'Next.js', 'Tailwind CSS', 'Design Systems', 'Prototyping',
@@ -96,6 +91,12 @@ export const revalidate = 60;
 export default async function PortfolioPage() {
   // Fetch projects on the server before the page renders
   const projects = await getProjects();
+
+  const dynamicStats = [
+    { target: 1, label: 'Year Learning' },
+    { target: projects.length, label: 'Projects Built' },
+    { target: 5, label: 'Tools Mastered' },
+  ];
 
   return (
     <>
@@ -330,7 +331,7 @@ export default async function PortfolioPage() {
         {/* Stats */}
         <div className="reveal mt-20">
           <div className="grid grid-cols-3 divide-x divide-zinc-800/50 rounded-2xl glass-card overflow-hidden">
-            {stats.map((stat, i) => (
+            {dynamicStats.map((stat, i) => (
               <div
                 key={stat.label}
                 className="flex flex-col items-center justify-center py-10 gap-1 hover:bg-emerald-500/[.02] transition-colors duration-500 group"

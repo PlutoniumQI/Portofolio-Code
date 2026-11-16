@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Experiences\Tables;
 
+use App\Models\Experience;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -19,6 +20,10 @@ class ExperiencesTable
             ->reorderable('sort_order')
             ->paginated(false)
             ->columns([
+                TextColumn::make('type')
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => Experience::types()[$state] ?? $state)
+                    ->color('gray'),
                 TextColumn::make('title')
                     ->searchable()
                     ->weight('bold'),
@@ -44,6 +49,7 @@ class ExperiencesTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                SelectFilter::make('type')->options(Experience::types()),
                 SelectFilter::make('is_active')
                     ->label('Visibility')
                     ->options([

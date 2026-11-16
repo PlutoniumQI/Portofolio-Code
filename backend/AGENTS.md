@@ -11,7 +11,8 @@ deployment runbook.
 - First-time setup: `composer install`, copy `.env.example` to `.env`, `php artisan key:generate`,
   create `database/database.sqlite`, `php artisan migrate --seed`, `php artisan storage:link`.
 - Legacy export: `php artisan portfolio:export` writes `../src/data/portfolio.json` and copies local
-  uploads. Phase 2 replaces it with `GET /api/portfolio` and the revalidation webhook.
+  uploads. It is kept only for the old one-page frontend; the API-backed site reads
+  `GET /api/portfolio` and the revalidation webhook.
 - Composer and all `artisan` commands need a PHP build with `ext-intl`. On this Windows machine:
 
   ```powershell
@@ -39,8 +40,20 @@ deployment runbook.
   not update an existing password; use the Filament profile page.
 - Uploads use `GITHUB_TOKEN` (fine-grained, Contents: Read and write, one repository). If the token
   is empty locally, uploads fall back to the `public` disk.
-- The API lives in `routes/api.php`. It currently exposes `GET /api/health`; phase 2 adds the content
-  and message endpoints.
+- The API lives in `routes/api.php`:
+  - `GET /api/health` — liveness.
+  - `GET /api/portfolio?locale=id|en` — localized profile, skills, education, certificates,
+    experiences, projects, testimonials, and published posts.
+  - `GET /api/projects`, `GET /api/projects/{slug}` — search (`q`), filter (`category`, `featured`),
+    and project detail.
+  - `GET /api/posts`, `GET /api/posts/{slug}` — published blog posts only.
+  - `GET /api/guestbook` — approved guestbook entries only.
+  - `POST /api/messages` — contact/guestbook submissions, throttled 5/minute per IP, with a
+    honeypot and guestbook moderation.
+- Admin sections: **Projects**, **Experience**, **Blog posts**, **Skills**, **Education**,
+  **Certificates**, **Testimonials**, **Messages & guestbook**, plus **Profile & CV** and
+  **Publish changes** under Settings. Project/experience/post/certificate/testimonial forms use
+  bilingual tabs; English falls back to Indonesian in the API.
 - Render routes traffic to port `10000`; `NGINX_HTTP_PORT=10000` and `SSL_MODE=off` are required for
   the `serversideup/php` image.
 

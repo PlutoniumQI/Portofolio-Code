@@ -1,0 +1,34 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('testimonials', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('role_id')->nullable();
+            $table->string('role_en')->nullable();
+            $table->string('company')->nullable();
+            $table->text('quote_id');
+            $table->text('quote_en')->nullable();
+            $table->string('category')->default('client')->index();
+            $table->string('avatar_path')->nullable();
+            $table->string('avatar_url')->nullable();
+            $table->string('avatar_disk')->nullable();
+            $table->unsignedTinyInteger('rating')->default(5);
+            $table->unsignedInteger('sort_order')->default(0)->index();
+            $table->boolean('is_active')->default(true)->index();
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('testimonials');
+    }
+};

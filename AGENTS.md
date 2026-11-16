@@ -23,8 +23,10 @@ uploads       -> GitHub assets repo -> raw.githubusercontent.com URLs
 Publish       -> POST /api/revalidate on Vercel
 ```
 
-**Migration status:** phase 1 infrastructure is scaffolded. The legacy pipeline below still runs and
-must not be extended:
+**Migration status:** phase 1 infrastructure and the phase 2 backend (content models, Filament admin,
+public API, GitHub uploader) are in place. The public site is still the existing one-page app that
+reads generated JSON until the API-backed bilingual frontend lands. The legacy pipeline below still
+runs during the transition and must not be extended:
 
 ```text
 Filament edit -> SQLite -> php artisan portfolio:export

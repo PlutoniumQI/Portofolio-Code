@@ -1,0 +1,39 @@
+<?php
+
+namespace App\Support;
+
+use Illuminate\Support\Facades\Storage;
+
+class Media
+{
+    /**
+     * Resolve a stored upload or an external URL into something a browser can
+     * load. The GitHub disk returns a raw.githubusercontent.com URL; the local
+     * public disk returns an absolute /storage URL.
+     */
+    public static function url(?string $path, ?string $disk = null, ?string $external = null): ?string
+    {
+        if (filled($path)) {
+            $disk = $disk ?: self::defaultDisk();
+
+            try {
+                $url = Storage::disk($disk)->url($path);
+            } catch (\Throwable) {
+                return filled($external) ? $external : null;
+            }
+
+            if (! str_starts_with($url, 'http://') && ! str_starts_with($url, 'https://')) {
+                $url = url($url);
+            }
+
+            return $url;
+        }
+
+        return filled($external) ? $external : null;
+    }
+
+    public static function defaultDisk(): string
+    {
+        return filled(config('portfolio.github.token')) ? 'github' : 'public';
+    }
+}

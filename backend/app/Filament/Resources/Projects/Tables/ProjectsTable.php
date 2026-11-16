@@ -6,6 +6,7 @@ use App\Models\Project;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -22,14 +23,17 @@ class ProjectsTable
             ->columns([
                 ImageColumn::make('image')
                     ->label('Image')
-                    ->getStateUsing(fn (Project $record): ?string => $record->image_path ?: $record->image_url)
-                    ->disk('public')
+                    ->getStateUsing(fn (Project $record): ?string => $record->imageUrl())
                     ->square()
                     ->imageSize(48),
                 TextColumn::make('title')
                     ->searchable()
                     ->weight('bold')
-                    ->description(fn (Project $record): ?string => $record->url ?: null),
+                    ->description(fn (Project $record): ?string => $record->slug),
+                TextColumn::make('category')
+                    ->badge()
+                    ->formatStateUsing(fn (?string $state): string => Project::categories()[$state] ?? (string) $state)
+                    ->toggleable(),
                 TextColumn::make('status')
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => Project::statuses()[$state] ?? $state)
@@ -38,10 +42,9 @@ class ProjectsTable
                         Project::STATUS_COMING_SOON => 'warning',
                         default => 'gray',
                     }),
-                TextColumn::make('tags')
-                    ->badge()
-                    ->formatStateUsing(fn ($state): string => is_array($state) ? implode(', ', $state) : (string) $state)
-                    ->toggleable(),
+                IconColumn::make('is_featured')
+                    ->label('Featured')
+                    ->boolean(),
                 TextColumn::make('sort_order')
                     ->label('#')
                     ->numeric()
@@ -53,8 +56,8 @@ class ProjectsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('status')
-                    ->options(Project::statuses()),
+                SelectFilter::make('status')->options(Project::statuses()),
+                SelectFilter::make('category')->options(Project::categories()),
             ])
             ->recordActions([
                 EditAction::make(),

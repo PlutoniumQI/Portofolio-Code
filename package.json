@@ -6,11 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "dev:backend": "cd backend && \"%USERPROFILE%\\.config\\herd\\bin\\php85\\php.exe\" artisan serve --host=127.0.0.1 --port=8000",
+    "export": "cd backend && \"%USERPROFILE%\\.config\\herd\\bin\\php85\\php.exe\" artisan portfolio:export"
   },
   "dependencies": {
-    "contentful": "^11.12.7",
-    "next": "16.2.10",
+    "next": "^16.4.6",
     "react": "19.2.4",
     "react-dom": "19.2.4"
   },
@@ -19,9 +20,8 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "contentful-management": "^12.8.0",
     "eslint": "^9",
-    "eslint-config-next": "16.2.10",
+    "eslint-config-next": "^16.4.6",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

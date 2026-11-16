@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Local Laravel + Filament admin (linted with Pint instead).
+    "backend/**",
   ]),
 ]);
 

@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "dev:backend": "cd backend && \"%USERPROFILE%\\.config\\herd\\bin\\php85\\php.exe\" artisan serve --host=127.0.0.1 --port=8000",
-    "export": "cd backend && \"%USERPROFILE%\\.config\\herd\\bin\\php85\\php.exe\" artisan portfolio:export"
+    "export": "cd backend && \"%USERPROFILE%\\.config\\herd\\bin\\php85\\php.exe\" artisan portfolio:export",
+    "fallback": "cd backend && \"%USERPROFILE%\\.config\\herd\\bin\\php85\\php.exe\" artisan portfolio:fallback"
   },
   "dependencies": {
     "next": "^16.4.6",

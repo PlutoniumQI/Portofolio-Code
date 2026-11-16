@@ -10,16 +10,20 @@ deployment runbook.
 - Admin: `php artisan serve --host=127.0.0.1 --port=8000` → <http://127.0.0.1:8000/admin>
 - First-time setup: `composer install`, copy `.env.example` to `.env`, `php artisan key:generate`,
   create `database/database.sqlite`, `php artisan migrate --seed`, `php artisan storage:link`.
-- Legacy export: `php artisan portfolio:export` writes `../src/data/portfolio.json` and copies local
-  uploads. It is kept only for the old one-page frontend; the API-backed site reads
-  `GET /api/portfolio` and the revalidation webhook.
+- Fallback snapshot: `php artisan portfolio:fallback` writes
+  `../src/data/portfolio-fallback.json`. The Next.js site reads it during `next build` and when the
+  API is unreachable. Regenerate and commit it after changing seed content.
+- `php artisan portfolio:export` is the retired static pipeline. It still writes
+  `../src/data/portfolio.json` and copies local uploads for reference, but the frontend no longer
+  reads that file. Do not extend it.
 - Composer and all `artisan` commands need a PHP build with `ext-intl`. On this Windows machine:
 
   ```powershell
   $env:PATH = 'C:\Users\YOGA\.config\herd\bin\php85;' + $env:PATH
   ```
 
-  From the repo root, `npm run dev:backend` and `npm run export` already use that binary.
+  From the repo root, `npm run dev:backend`, `npm run export`, and `npm run fallback` already use that
+  binary.
 
 - Verify with `php artisan test`, `vendor\bin\pint --test`, and
   `php artisan route:list --path=api`.
@@ -54,6 +58,10 @@ deployment runbook.
   **Certificates**, **Testimonials**, **Messages & guestbook**, plus **Profile & CV** and
   **Publish changes** under Settings. Project/experience/post/certificate/testimonial forms use
   bilingual tabs; English falls back to Indonesian in the API.
+- **Settings → Publish changes** calls `App\Services\FrontendRevalidator`, which posts to
+  `FRONTEND_REVALIDATE_URL` (the Vercel `/api/revalidate` route) with
+  `FRONTEND_REVALIDATE_SECRET`. Leave both empty locally; ISR refreshes on its own schedule.
+  The page also has a collapsed legacy section that calls `portfolio:export`.
 - Render routes traffic to port `10000`; `NGINX_HTTP_PORT=10000` and `SSL_MODE=off` are required for
   the `serversideup/php` image.
 

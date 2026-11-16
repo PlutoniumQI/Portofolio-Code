@@ -32,6 +32,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Offline fallback
+    |--------------------------------------------------------------------------
+    |
+    | The Next.js site uses this JSON when the API is unreachable (for example
+    | the Render free instance is asleep during a build). Regenerate it with
+    | `php artisan portfolio:fallback` after content changes.
+    |
+    */
+
+    'fallback_json' => env('PORTFOLIO_FALLBACK_JSON', base_path('../src/data/portfolio-fallback.json')),
+
+    /*
+    |--------------------------------------------------------------------------
     | GitHub assets
     |--------------------------------------------------------------------------
     |

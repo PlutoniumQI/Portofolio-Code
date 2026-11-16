@@ -1,11 +1,11 @@
 # re:SKY — Portfolio
 
-Personal portfolio for Muhammad Resky Ramadhan. Next.js 16 frontend, Laravel 13 + Filament 5 admin,
-deployed for free on Vercel + Render + Neon.
+Bilingual personal portfolio for Muhammad Resky Ramadhan. A Next.js 16 frontend, a Laravel 13 +
+Filament 5 admin and API, deployed for free on Vercel + Render + Neon.
 
-> **Status:** phase 1 infrastructure is in place. The public site is still the existing one-page
-> Next.js app that reads generated JSON. Phase 2 replaces that with the API, bilingual multi-page
-> frontend, GitHub uploads, and the full UKK feature set.
+> **Status:** the API-backed bilingual frontend is built; lint, type-check, and the production build
+> pass. What remains is deployment — Neon, Render, Vercel, and DNS. The runbook is in
+> [`docs/deploy-render-neon.md`](docs/deploy-render-neon.md).
 
 ## Stack
 
@@ -16,59 +16,68 @@ deployed for free on Vercel + Render + Neon.
 | Database | PostgreSQL | Neon Free |
 | Images / PDFs | Public GitHub assets repo | GitHub raw URLs |
 
-Target content flow:
+Content flow:
 
 ```text
-Filament edit -> Neon -> GET /api/portfolio -> Next.js ISR -> Vercel
+Filament edit -> Neon Postgres -> GET /api/portfolio -> Next.js ISR -> Vercel
 uploads       -> GitHub assets repo -> raw.githubusercontent.com URLs
-Publish       -> POST /api/revalidate -> Vercel
+Publish       -> POST /api/revalidate on Vercel
 ```
 
-Until phase 2, content still flows through the legacy export:
+Nothing on the site is hardcoded except the UI copy: projects, experience, skills, education,
+certificates, testimonials, blog posts, profile, CV, and social links all come from the admin.
 
-```text
-Filament -> SQLite -> php artisan portfolio:export -> src/data/portfolio.json -> git push -> Vercel
-```
+## Pages
+
+Routes are locale-prefixed with `id` and `en`. `/` redirects to `/id`; unknown locales return 404.
+
+| Route | Contents |
+|---|---|
+| `/[locale]` | Hero, featured projects, highlights |
+| `/[locale]/about` | Bio, hard/soft skills with levels, education |
+| `/[locale]/skills` | Full skill breakdown by category |
+| `/[locale]/projects` | Search + category/first-look filters |
+| `/[locale]/projects/[slug]` | Gallery, tech stack, process story, links |
+| `/[locale]/experience` | Work, organisation, and competition timeline |
+| `/[locale]/certificates` | Certificate grid with credential links |
+| `/[locale]/testimonials` | Client, mentor, teacher, and peer quotes |
+| `/[locale]/blog` | Post list |
+| `/[locale]/blog/[slug]` | Post detail |
+| `/[locale]/cv` | Digital CV, printable |
+| `/[locale]/contact` | Contact form, email, LinkedIn, socials |
+| `/[locale]/guestbook` | Approved guestbook entries + submission form |
+
+Light/dark mode, language switching, back-to-top, and reduced-motion support work across all pages.
 
 ## Project layout
 
 ```text
-.
-├── src/                       Next.js app, components, generated portfolio data
-├── public/                    static assets and generated project images
-├── backend/                   Laravel 13 + Filament 5
-│   ├── Dockerfile             Render production image
-│   ├── docker/entrypoint.d/   startup scripts
-│   └── config/portfolio.php   export, GitHub, and frontend settings
-├── render.yaml                Render Blueprint
-├── docs/deploy-render-neon.md deployment runbook
-└── AGENTS.md                  agent-facing project rules
+src/app/[locale]/            localized pages (root layout lives here)
+src/app/api/revalidate/      webhook that refreshes ISR tags
+src/app/api/messages/        same-origin proxy for contact/guestbook posts
+src/components/              site shell, UI primitives, explorers, forms
+src/lib/                     API client, dictionaries, types, i18n helpers
+src/data/portfolio-fallback.json   committed bilingual snapshot for builds/offline
+backend/                     Laravel 13 + Filament 5 admin and API
+render.yaml                  Render Blueprint for portfolio-api
+docs/deploy-render-neon.md   deployment runbook
 ```
 
 ## Requirements
 
 - Node.js 20+ and npm
 - PHP 8.4+ with `ext-intl` and Composer
-- On this Windows machine, Composer must use the full Herd PHP build:
+- On this Windows machine, backend commands need the full Herd PHP build:
 
   ```powershell
   $env:PATH = 'C:\Users\YOGA\.config\herd\bin\php85;' + $env:PATH
   ```
 
-  `npm run dev:backend` and `npm run export` already use that binary automatically.
+  `npm run dev:backend`, `npm run export`, and `npm run fallback` already use that binary.
 
-## Frontend
+## Local development
 
-```powershell
-npm install
-npm run dev
-```
-
-Open <http://localhost:3000>. The current page imports `src/data/portfolio.json` at build time.
-Copy `.env.example` to `.env.local` only if you need to override the API URL while developing the
-next phase.
-
-## Backend (local admin)
+### Backend (admin + API)
 
 First-time setup:
 
@@ -82,86 +91,120 @@ php artisan migrate --seed
 php artisan storage:link
 ```
 
-Start the admin:
+Start it from the repo root:
 
 ```powershell
-# from the repo root
 npm run dev:backend
 ```
 
-Open <http://127.0.0.1:8000/admin>. The seeded login comes from `ADMIN_EMAIL` / `ADMIN_PASSWORD` in
-`backend/.env` (defaults: `admin@portfolio.local` / `password`). After signing in, open the user menu →
-**Profile** to change the password.
+Admin: <http://127.0.0.1:8000/admin> — the seeded login comes from `ADMIN_EMAIL` /
+`ADMIN_PASSWORD` in `backend/.env` (defaults: `admin@portfolio.local` / `password`). Change it from
+the user menu → **Profile** after the first sign-in.
 
-### Editing content (legacy workflow)
-
-1. Edit **Projects** or **Experience** in `/admin`.
-2. Choose **Publish to site** in the sidebar (or run `npm run export`).
-3. Commit and push the generated files:
-
-   ```powershell
-   git add src/data/portfolio.json public/images/projects
-   git commit -m "content: update portfolio"
-   git push
-   ```
-
-Vercel rebuilds from the committed JSON and images. Projects with status `Draft` are not exported.
-`Published` and `Coming Soon` are both exported; the frontend shows the “Coming Soon” badge for the
-latter. Inactive experiences are skipped.
-
-### Images
-
-| Option | Field | Behavior |
-|---|---|---|
-| Local upload | **Upload image** | Copied to `public/images/projects/` by the export command |
-| GitHub URL | **Image URL** | Passed through untouched |
-
-For GitHub, use a **raw** URL from a public repo:
-
-```text
-https://raw.githubusercontent.com/<user>/<repo>/<branch>/<path>/image.webp
-```
-
-Not the `github.com/.../blob/...` page, and not a private repo. If both fields are filled, the local
-upload wins.
-
-Local uploads are capped at 2 MB by `PORTFOLIO_MAX_UPLOAD_KB` to match the default PHP limit. To
-accept larger files, raise both the PHP limits and that value, then restart the server:
+### Frontend
 
 ```powershell
-php -d upload_max_filesize=10M -d post_max_size=12M artisan serve --host=127.0.0.1 --port=8000
+npm install
+npm run dev
 ```
 
-PHP here has no JPEG/WebP conversion support, so compress images before uploading. PNG, JPEG, WebP,
-GIF, and AVIF uploads are accepted as-is.
+Open <http://localhost:3000>; it redirects to `/id`. Copy `.env.example` to `.env.local` only if you
+need a different API URL or want to test the revalidation webhook.
+
+The frontend reads the API at request time. If the API is asleep or unreachable, pages render from
+`src/data/portfolio-fallback.json` instead of failing. Regenerate that snapshot after changing seed
+data:
+
+```powershell
+npm run fallback
+```
+
+`next build` always uses the snapshot, so Vercel builds never depend on the Render free instance
+being awake. Live content is fetched on the first revalidation after deployment.
+
+## Editing content
+
+Everything is edited in Filament; no code or redeploy is needed.
+
+- **Projects** — status `draft` / `published` / `coming_soon`, rich process story, gallery, links,
+  searchable tags. Drag rows to reorder.
+- **Experience** — work, organisation, and competition entries with bilingual descriptions.
+- **Blog posts** — Markdown body, cover image, published flag.
+- **Skills** — category, level percentage, hard/soft grouping, order.
+- **Education, Certificates, Testimonials** — bilingual forms; testimonial type is `client`,
+  `mentor`, `teacher`, or `peer`.
+- **Profile & CV** — name, roles, bio, contact details, socials, CV summary and download.
+- **Messages & guestbook** — contact submissions and guestbook entries. Guestbook entries stay
+  hidden until **Approve** is toggled.
+
+Bilingual fields use `_id` / `_en` tabs. English falls back to Indonesian when a translation is
+empty.
+
+After editing, open **Settings → Publish changes** and click **Revalidate live site**. In production
+that calls `POST /api/revalidate` on Vercel. Locally, leave `FRONTEND_REVALIDATE_URL` and
+`FRONTEND_REVALIDATE_SECRET` empty in `backend/.env`; pages refresh on their own ISR schedule
+(`PORTFOLIO_REVALIDATE_SECONDS`, default 300).
+
+## Images and files
+
+Uploads from Filament go to the public `portfolio-assets` GitHub repository through the Contents
+API, using a fine-grained `GITHUB_TOKEN` (Contents: Read and write, limited to that repo). The
+returned `raw.githubusercontent.com` URL is stored on the record. Set `GITHUB_TOKEN` in Render; never
+commit it.
+
+Without a token (the local default), uploads fall back to Laravel's `public` disk at
+`backend/storage/app/public`.
+
+- **Upload wins** over the external URL field when both are set.
+- If you paste a URL manually, use the **raw** form
+  `https://raw.githubusercontent.com/<user>/<repo>/<branch>/<path>` — not a `github.com/.../blob/...`
+  page, and not a private repo.
+- Size cap: `PORTFOLIO_MAX_UPLOAD_KB` (10 MB in production, 2 MB local). Keep
+  `PHP_UPLOAD_MAX_FILE_SIZE` and `PHP_POST_MAX_SIZE` above it.
+- Compress images before uploading: this PHP build has no GD/Imagick conversion.
+- Render's filesystem is ephemeral, so only the GitHub path persists across restarts.
+
+## Forms
+
+Contact and guestbook submissions post to the frontend's own `POST /api/messages` route. That route
+forwards to Laravel server-side using `API_URL`, so the browser never needs CORS or a public API
+URL. Both forms validate client-side, include a honeypot, and show localized success/error messages.
+
+Guestbook entries are only returned by `GET /api/guestbook` after approval. Messages are throttled
+to 5 requests per minute per IP.
 
 ## API
 
-The backend exposes a small public API under `/api`:
-
 ```text
-GET /api/health   liveness JSON (no database access)
-GET /up           Render health check
+GET  /api/health                 liveness (no database access)
+GET  /api/portfolio?locale=id|en localized profile, skills, education, certificates,
+                                 experience, projects, testimonials, published posts
+GET  /api/projects               search with q, filter by category/featured
+GET  /api/projects/{slug}        project detail
+GET  /api/posts                  published posts only
+GET  /api/posts/{slug}           post detail
+GET  /api/guestbook              approved guestbook entries only
+POST /api/messages               contact/guestbook submission
 ```
 
-Phase 2 adds `GET /api/portfolio` and `POST /api/messages`. CORS is restricted to the origins in
-`FRONTEND_ALLOWED_ORIGINS`; see `backend/config/cors.php`.
+CORS is restricted to `FRONTEND_ALLOWED_ORIGINS` (`backend/config/cors.php`). The Next.js form proxy
+does not need it, but keep it correct for the admin and any direct browser calls.
 
 ## Deployment
 
-The full zero-budget runbook is in [`docs/deploy-render-neon.md`](docs/deploy-render-neon.md). It
-covers:
+Both apps deploy from this repository: Vercel builds Next.js at the root, Render builds the Docker
+image from `backend/`. The full zero-budget runbook is
+[`docs/deploy-render-neon.md`](docs/deploy-render-neon.md); it covers:
 
 1. Creating the public `portfolio-assets` GitHub repo and a fine-grained token.
 2. Creating the Neon Postgres project.
 3. Creating the Render Blueprint (`render.yaml`).
 4. Seeding the admin user and content.
-5. Adding `api.<domain>` and the Vercel domains.
+5. Setting Vercel env vars and adding the custom domains.
 6. Keeping the free Render service awake with UptimeRobot.
 7. Security, local fallback, and troubleshooting.
 
-Both apps deploy from the same repository: Vercel builds the Next.js app at the root, and Render
-builds the Docker image from `backend/`.
+The shared secret must match on both sides: `FRONTEND_REVALIDATE_SECRET` in Render and Vercel.
 
 ## Verification
 
@@ -185,7 +228,8 @@ docker build -t portfolio-api .
 
 - `backend/.env` and the SQLite database are local and git-ignored. Only `*.example` files are
   committed.
-- Render's filesystem is ephemeral. Uploaded files will not persist until the GitHub uploader ships;
-  use raw GitHub URLs in the meantime.
-- Render Free sleeps after 15 minutes. The first request after idle can take about a minute.
-- Do not add a Vercel build for `backend/` or a PHP runtime on Vercel.
+- Render Free sleeps after 15 minutes; the first request can take about a minute.
+- Neon may suspend idle compute. Use the direct connection string with `DB_SSLMODE=require`.
+- `src/data/portfolio.json` and `php artisan portfolio:export` belong to the retired one-page
+  pipeline. The public site no longer reads them; use the admin and the API instead.
+- Do not add a Vercel build for `backend/`, a PHP runtime on Vercel, or a queue worker on Render Free.

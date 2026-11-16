@@ -1,0 +1,918 @@
+{
+    "id": {
+        "locale": "id",
+        "generated_at": "2026-11-16T12:13:18+00:00",
+        "profile": {
+            "id": "1",
+            "full_name": "Muhammad Resky Ramadhan",
+            "headline": "Siswa PPLG & Desainer UI/UX",
+            "intro": "Saya membangun antarmuka yang bersih, aksesibel, dan menyenangkan untuk digunakan.",
+            "about": "<p>Saya Muhammad Resky Ramadhan, siswa SMKN 2 Banjarmasin jurusan Pengembangan Perangkat Lunak dan Gim. Saya tertarik pada desain UI/UX, front-end development, dan cara teknologi dapat menyelesaikan masalah nyata.</p><p>Saat ini saya mengerjakan Modulia, sebuah platform ujian online, dan terus belajar membangun produk dari riset hingga implementasi.</p>",
+            "location": "Banjarmasin, Indonesia",
+            "email": "hello@example.com",
+            "phone": null,
+            "availability": "Terbuka untuk kolaborasi",
+            "is_available": true,
+            "avatar_url": null,
+            "cv_url": null,
+            "socials": {
+                "linkedin": "https://www.linkedin.com/",
+                "github": "https://github.com/PlutoniumQI"
+            },
+            "stats": {
+                "years_learning": 2,
+                "projects_completed": 3,
+                "tools_mastered": 8
+            }
+        },
+        "skills": {
+            "hard": [
+                {
+                    "id": "1",
+                    "name": "UI/UX Design",
+                    "category": "hard",
+                    "percentage": 85,
+                    "description": "Riset, wireframe, prototyping, dan pengujian kegunaan.",
+                    "icon": "palette"
+                },
+                {
+                    "id": "2",
+                    "name": "Figma",
+                    "category": "hard",
+                    "percentage": 90,
+                    "description": "Komponen, auto layout, design system, dan kolaborasi.",
+                    "icon": "figma"
+                },
+                {
+                    "id": "3",
+                    "name": "HTML & CSS",
+                    "category": "hard",
+                    "percentage": 85,
+                    "description": "Markup semantik, layout responsif, dan aksesibilitas.",
+                    "icon": "code"
+                },
+                {
+                    "id": "4",
+                    "name": "JavaScript",
+                    "category": "hard",
+                    "percentage": 78,
+                    "description": "DOM, fetch API, dan logika antarmuka modern.",
+                    "icon": "javascript"
+                },
+                {
+                    "id": "5",
+                    "name": "React & Next.js",
+                    "category": "hard",
+                    "percentage": 75,
+                    "description": "Komponen, routing, data fetching, dan optimasi halaman.",
+                    "icon": "react"
+                },
+                {
+                    "id": "6",
+                    "name": "Tailwind CSS",
+                    "category": "hard",
+                    "percentage": 85,
+                    "description": "Utility-first styling dan design token di CSS.",
+                    "icon": "tailwind"
+                },
+                {
+                    "id": "7",
+                    "name": "Laravel",
+                    "category": "hard",
+                    "percentage": 72,
+                    "description": "Routing, Eloquent, validasi, dan API.",
+                    "icon": "laravel"
+                },
+                {
+                    "id": "8",
+                    "name": "PHP",
+                    "category": "hard",
+                    "percentage": 70,
+                    "description": "Dasar pemrograman server-side dan struktur aplikasi.",
+                    "icon": "php"
+                }
+            ],
+            "soft": [
+                {
+                    "id": "9",
+                    "name": "Communication",
+                    "category": "soft",
+                    "percentage": 85,
+                    "description": "Menyampaikan ide dengan jelas kepada tim dan pengguna.",
+                    "icon": "chat"
+                },
+                {
+                    "id": "10",
+                    "name": "Teamwork",
+                    "category": "soft",
+                    "percentage": 90,
+                    "description": "Berkolaborasi lintas peran dan memberi umpan balik.",
+                    "icon": "users"
+                },
+                {
+                    "id": "11",
+                    "name": "Problem Solving",
+                    "category": "soft",
+                    "percentage": 82,
+                    "description": "Memecah masalah kompleks menjadi langkah kecil.",
+                    "icon": "sparkles"
+                },
+                {
+                    "id": "12",
+                    "name": "Time Management",
+                    "category": "soft",
+                    "percentage": 78,
+                    "description": "Mengatur prioritas antara sekolah dan proyek.",
+                    "icon": "clock"
+                },
+                {
+                    "id": "13",
+                    "name": "Adaptability",
+                    "category": "soft",
+                    "percentage": 82,
+                    "description": "Cepat belajar alat dan kebutuhan baru.",
+                    "icon": "refresh"
+                }
+            ]
+        },
+        "educations": [
+            {
+                "id": "1",
+                "institution": "SMKN 2 Banjarmasin",
+                "degree": "Sekolah Menengah Kejuruan",
+                "field": "Pengembangan Perangkat Lunak dan Gim",
+                "start_date": "2024",
+                "end_date": "Now",
+                "period": "2024 — Now",
+                "description": "Belajar pemrograman web, basis data, dan desain antarmuka melalui proyek nyata."
+            },
+            {
+                "id": "2",
+                "institution": "SMPN 1 Banjarmasin",
+                "degree": "Sekolah Menengah Pertama",
+                "field": null,
+                "start_date": "2021",
+                "end_date": "2024",
+                "period": "2021 — 2024",
+                "description": "Mulai tertarik pada desain digital dan pengembangan web."
+            }
+        ],
+        "certificates": [
+            {
+                "id": "1",
+                "title": "Belajar Dasar UX Design",
+                "issuer": "Dicoding Indonesia",
+                "issued_at": "2025-06-15",
+                "expires_at": null,
+                "credential_id": null,
+                "credential_url": "https://www.dicoding.com/",
+                "image_url": null,
+                "description": "Dasar riset pengguna, wireframe, dan pengujian kegunaan."
+            },
+            {
+                "id": "2",
+                "title": "Front-End Web Development",
+                "issuer": "Dicoding Indonesia",
+                "issued_at": "2025-09-20",
+                "expires_at": null,
+                "credential_id": null,
+                "credential_url": "https://www.dicoding.com/",
+                "image_url": null,
+                "description": "HTML, CSS, JavaScript, dan pengembangan antarmuka responsif."
+            },
+            {
+                "id": "3",
+                "title": "Figma untuk Desain UI",
+                "issuer": "Coursera",
+                "issued_at": "2024-11-10",
+                "expires_at": null,
+                "credential_id": null,
+                "credential_url": "https://www.coursera.org/",
+                "image_url": null,
+                "description": "Komponen, prototyping, dan kolaborasi di Figma."
+            }
+        ],
+        "experiences": [
+            {
+                "id": "1",
+                "type": "education",
+                "type_label": "Education",
+                "title": "PPLG Student",
+                "company": "SMKN 2 Banjarmasin",
+                "location": "Banjarmasin, Indonesia",
+                "date_range": "2024 — Now",
+                "description": "Mempelajari dasar rekayasa perangkat lunak dan desain UI/UX, lalu menerapkannya pada proyek sekolah dan organisasi.",
+                "tags": [
+                    "Figma",
+                    "Tailwind CSS",
+                    "Laravel",
+                    "UI/UX"
+                ],
+                "url": null
+            },
+            {
+                "id": "2",
+                "type": "work",
+                "type_label": "Work",
+                "title": "UI/UX Designer",
+                "company": "Modulia",
+                "location": "Remote",
+                "date_range": "2025 — 2026",
+                "description": "Merancang alur ujian, komponen antarmuka, dan prototipe untuk platform ujian online Modulia.",
+                "tags": [
+                    "Figma",
+                    "UI/UX",
+                    "Design System"
+                ],
+                "url": null
+            },
+            {
+                "id": "3",
+                "type": "internship",
+                "type_label": "PLK / Internship",
+                "title": "PLK Intern",
+                "company": "PT Digital Nusantara",
+                "location": "Banjarmasin, Indonesia",
+                "date_range": "2025",
+                "description": "Membantu tim produk memperbaiki tampilan dasbor dan mendokumentasikan komponen UI.",
+                "tags": [
+                    "UI/UX",
+                    "Figma",
+                    "Documentation"
+                ],
+                "url": null
+            },
+            {
+                "id": "4",
+                "type": "organization",
+                "type_label": "Organisation",
+                "title": "OSIS Member",
+                "company": "SMKN 2 Banjarmasin",
+                "location": "Banjarmasin, Indonesia",
+                "date_range": "2024 — 2025",
+                "description": "Mengelola publikasi acara sekolah dan berkolaborasi dengan divisi lain.",
+                "tags": [
+                    "Communication",
+                    "Teamwork"
+                ],
+                "url": null
+            },
+            {
+                "id": "5",
+                "type": "competition",
+                "type_label": "Competition",
+                "title": "Web Design Competition",
+                "company": "Universitas Lambung Mangkurat",
+                "location": "Banjarmasin, Indonesia",
+                "date_range": "2025",
+                "description": "Membuat konsep dan prototipe situs pendidikan bersama tim, lalu mempresentasikannya kepada juri.",
+                "tags": [
+                    "Figma",
+                    "Web Design",
+                    "Presentation"
+                ],
+                "url": null
+            }
+        ],
+        "projects": [
+            {
+                "id": "1",
+                "slug": "exam-platform",
+                "title": "Exam Platform",
+                "excerpt": "Modulia membantu guru membuat, menjadwalkan, dan menilai ujian dalam satu alur kerja yang sederhana.",
+                "description": "Platform ujian online untuk sekolah dan bimbingan belajar.",
+                "category": "web-app",
+                "category_label": "Web app",
+                "tags": [
+                    "Figma",
+                    "Tailwind CSS",
+                    "Laravel",
+                    "UI/UX"
+                ],
+                "url": "https://suj.modulia.web.id/",
+                "repo_url": null,
+                "image_url": null,
+                "status": "published",
+                "is_featured": true,
+                "content": "<p>Modulia dimulai dari masalah sederhana: guru menghabiskan terlalu banyak waktu untuk menyusun dan mengoreksi ujian kertas. Saya memetakan alur kerja guru, membuat wireframe, lalu membangun prototipe di Figma bersama tim.</p><h3>Proses</h3><ul><li>Riset pengguna dengan tiga guru dan dua siswa.</li><li>Information architecture dan user flow untuk pembuatan ujian.</li><li>Design system kecil berisi komponen soal, timer, dan hasil.</li><li>Implementasi front-end dengan Tailwind CSS dan integrasi API.</li></ul><h3>Hasil</h3><p>Prototipe digunakan untuk demo internal dan menjadi dasar pengembangan platform Modulia.</p>",
+                "gallery": [],
+                "created_at": "2026-11-16T12:04:06+00:00"
+            },
+            {
+                "id": "2",
+                "slug": "portfolio-website",
+                "title": "Portfolio Website",
+                "excerpt": "Portofolio ini menghubungkan Next.js di Vercel dengan Laravel dan Filament di Render.",
+                "description": "Situs portofolio bilingual dengan admin Filament dan API.",
+                "category": "web-app",
+                "category_label": "Web app",
+                "tags": [
+                    "Next.js",
+                    "Laravel",
+                    "Filament",
+                    "Tailwind CSS"
+                ],
+                "url": null,
+                "repo_url": "https://github.com/PlutoniumQI/Portofolio-Code",
+                "image_url": null,
+                "status": "published",
+                "is_featured": true,
+                "content": "<p>Saya ingin portofolio yang bisa diperbarui tanpa mengubah kode. Admin Filament menyimpan konten di Postgres, API menyajikannya dalam dua bahasa, dan Next.js merender halaman dengan ISR.</p><h3>Yang saya pelajari</h3><ul><li>Merancang skema konten bilingual.</li><li>Mengunggah aset ke GitHub agar bertahan di hosting gratis.</li><li>Menjaga performa dan aksesibilitas di perangkat mobile.</li></ul>",
+                "gallery": [],
+                "created_at": "2026-11-16T12:04:06+00:00"
+            },
+            {
+                "id": "3",
+                "slug": "modulia-design-system",
+                "title": "Modulia Design System",
+                "excerpt": "Kumpulan komponen Figma yang konsisten untuk tim produk dan engineering.",
+                "description": "Komponen dan token desain untuk produk Modulia.",
+                "category": "design-system",
+                "category_label": "Design system",
+                "tags": [
+                    "Figma",
+                    "Design System",
+                    "UI/UX"
+                ],
+                "url": null,
+                "repo_url": null,
+                "image_url": null,
+                "status": "coming_soon",
+                "is_featured": false,
+                "content": "<p>Design system ini menyatukan warna, tipografi, spacing, dan komponen form yang dipakai di platform ujian. Tujuannya mengurangi keputusan desain berulang dan mempercepat handoff.</p><h3>Isi</h3><ul><li>Token warna dan tipografi.</li><li>Komponen tombol, input, modal, dan tabel.</li><li>Dokumentasi penggunaan dan contoh state.</li></ul>",
+                "gallery": [],
+                "created_at": "2026-11-16T12:04:06+00:00"
+            }
+        ],
+        "project_categories": [
+            {
+                "value": "web-app",
+                "label": "Web app",
+                "count": 2
+            },
+            {
+                "value": "design-system",
+                "label": "Design system",
+                "count": 1
+            }
+        ],
+        "testimonials": [
+            {
+                "id": "1",
+                "name": "Rizky Pratama",
+                "role": "Founder",
+                "company": "Modulia",
+                "quote": "Resky mampu menerjemahkan kebutuhan produk yang rumit menjadi alur yang sederhana dan mudah dipahami.",
+                "category": "client",
+                "category_label": "Client",
+                "avatar_url": null,
+                "rating": 5
+            },
+            {
+                "id": "2",
+                "name": "Aulia Rahma",
+                "role": "UI/UX Mentor",
+                "company": "Modulia",
+                "quote": "Ia cepat belajar, terbuka pada masukan, dan selalu membawa solusi ke diskusi.",
+                "category": "mentor",
+                "category_label": "Mentor",
+                "avatar_url": null,
+                "rating": 5
+            },
+            {
+                "id": "3",
+                "name": "Hendra Saputra",
+                "role": "Guru PPLG",
+                "company": "SMKN 2 Banjarmasin",
+                "quote": "Proyeknya rapi dan menunjukkan pemahaman yang kuat tentang proses desain.",
+                "category": "teacher",
+                "category_label": "Teacher",
+                "avatar_url": null,
+                "rating": 5
+            },
+            {
+                "id": "4",
+                "name": "Nabila Putri",
+                "role": "Teman sekelas",
+                "company": "SMKN 2 Banjarmasin",
+                "quote": "Selalu siap membantu dan bisa diandalkan saat kerja kelompok.",
+                "category": "peer",
+                "category_label": "Peer",
+                "avatar_url": null,
+                "rating": 5
+            }
+        ],
+        "testimonial_categories": [
+            {
+                "value": "client",
+                "label": "Client"
+            },
+            {
+                "value": "mentor",
+                "label": "Mentor"
+            },
+            {
+                "value": "teacher",
+                "label": "Teacher"
+            },
+            {
+                "value": "peer",
+                "label": "Peer"
+            }
+        ],
+        "posts": [
+            {
+                "id": "2",
+                "slug": "figma-to-nextjs",
+                "title": "Dari Figma ke Next.js",
+                "excerpt": "Hal-hal yang saya perhatikan saat mengubah desain menjadi komponen yang responsif.",
+                "cover_url": null,
+                "category": "Development",
+                "tags": [
+                    "Next.js",
+                    "Tailwind CSS",
+                    "Accessibility"
+                ],
+                "published_at": "2026-11-12T12:04:06+00:00",
+                "is_featured": false,
+                "reading_time": 1,
+                "body": "<p>Handoff bukan sekadar menyalin warna dan ukuran. Ada keputusan tentang spacing, state, dan perilaku di layar kecil yang perlu diselesaikan bersama.</p><h3>Tiga kebiasaan yang membantu</h3><ul><li>Menamai komponen dengan bahasa yang sama di Figma dan kode.</li><li>Menentukan breakpoint sebelum menulis CSS.</li><li>Menguji dengan keyboard dan pembaca layar sejak awal.</li></ul><p>Semakin cepat perbedaan antara desain dan implementasi ditemukan, semakin murah perbaikannya.</p>"
+            },
+            {
+                "id": "1",
+                "slug": "designing-for-clarity",
+                "title": "Merancang untuk Kejelasan",
+                "excerpt": "Catatan tentang menyederhanakan alur ujian tanpa menghilangkan fitur penting.",
+                "cover_url": null,
+                "category": "Design notes",
+                "tags": [
+                    "UI/UX",
+                    "Figma",
+                    "Case study"
+                ],
+                "published_at": "2026-11-04T12:04:06+00:00",
+                "is_featured": true,
+                "reading_time": 1,
+                "body": "<p>Desain yang baik sering terasa sederhana karena banyak keputusan rumit disembunyikan dengan rapi. Saat mengerjakan Modulia, saya belajar bahwa mengurangi pilihan tidak selalu berarti mengurangi kemampuan.</p><h3>Mulai dari pertanyaan</h3><p>Saya mewawancarai guru dan siswa untuk memahami langkah mana yang paling sering membuat mereka ragu. Dari sana, saya membuat satu alur utama dan memindahkan opsi lanjutan ke tempat yang tidak mengganggu.</p><h3>Uji, lalu perbaiki</h3><p>Prototipe diuji dengan tugas nyata. Perubahan kecil pada label dan urutan field ternyata lebih berdampak daripada menambah fitur baru.</p>"
+            }
+        ]
+    },
+    "en": {
+        "locale": "en",
+        "generated_at": "2026-11-16T12:13:18+00:00",
+        "profile": {
+            "id": "1",
+            "full_name": "Muhammad Resky Ramadhan",
+            "headline": "Software Engineering Student & UI/UX Designer",
+            "intro": "I build clean, accessible, and enjoyable interfaces for the web.",
+            "about": "<p>I am Muhammad Resky Ramadhan, a software engineering student at SMKN 2 Banjarmasin. I am interested in UI/UX design, front-end development, and how technology can solve real problems.</p><p>I am currently working on Modulia, an online exam platform, and continue learning to build products from research to implementation.</p>",
+            "location": "Banjarmasin, Indonesia",
+            "email": "hello@example.com",
+            "phone": null,
+            "availability": "Open to collaboration",
+            "is_available": true,
+            "avatar_url": null,
+            "cv_url": null,
+            "socials": {
+                "linkedin": "https://www.linkedin.com/",
+                "github": "https://github.com/PlutoniumQI"
+            },
+            "stats": {
+                "years_learning": 2,
+                "projects_completed": 3,
+                "tools_mastered": 8
+            }
+        },
+        "skills": {
+            "hard": [
+                {
+                    "id": "1",
+                    "name": "UI/UX Design",
+                    "category": "hard",
+                    "percentage": 85,
+                    "description": "Research, wireframes, prototyping, and usability testing.",
+                    "icon": "palette"
+                },
+                {
+                    "id": "2",
+                    "name": "Figma",
+                    "category": "hard",
+                    "percentage": 90,
+                    "description": "Components, auto layout, design systems, and collaboration.",
+                    "icon": "figma"
+                },
+                {
+                    "id": "3",
+                    "name": "HTML & CSS",
+                    "category": "hard",
+                    "percentage": 85,
+                    "description": "Semantic markup, responsive layout, and accessibility.",
+                    "icon": "code"
+                },
+                {
+                    "id": "4",
+                    "name": "JavaScript",
+                    "category": "hard",
+                    "percentage": 78,
+                    "description": "DOM, fetch API, and modern interface logic.",
+                    "icon": "javascript"
+                },
+                {
+                    "id": "5",
+                    "name": "React & Next.js",
+                    "category": "hard",
+                    "percentage": 75,
+                    "description": "Components, routing, data fetching, and page optimisation.",
+                    "icon": "react"
+                },
+                {
+                    "id": "6",
+                    "name": "Tailwind CSS",
+                    "category": "hard",
+                    "percentage": 85,
+                    "description": "Utility-first styling and design tokens in CSS.",
+                    "icon": "tailwind"
+                },
+                {
+                    "id": "7",
+                    "name": "Laravel",
+                    "category": "hard",
+                    "percentage": 72,
+                    "description": "Routing, Eloquent, validation, and APIs.",
+                    "icon": "laravel"
+                },
+                {
+                    "id": "8",
+                    "name": "PHP",
+                    "category": "hard",
+                    "percentage": 70,
+                    "description": "Server-side programming fundamentals and application structure.",
+                    "icon": "php"
+                }
+            ],
+            "soft": [
+                {
+                    "id": "9",
+                    "name": "Communication",
+                    "category": "soft",
+                    "percentage": 85,
+                    "description": "Explaining ideas clearly to teams and users.",
+                    "icon": "chat"
+                },
+                {
+                    "id": "10",
+                    "name": "Teamwork",
+                    "category": "soft",
+                    "percentage": 90,
+                    "description": "Collaborating across roles and giving useful feedback.",
+                    "icon": "users"
+                },
+                {
+                    "id": "11",
+                    "name": "Problem Solving",
+                    "category": "soft",
+                    "percentage": 82,
+                    "description": "Breaking complex problems into small, testable steps.",
+                    "icon": "sparkles"
+                },
+                {
+                    "id": "12",
+                    "name": "Time Management",
+                    "category": "soft",
+                    "percentage": 78,
+                    "description": "Balancing school work, projects, and deadlines.",
+                    "icon": "clock"
+                },
+                {
+                    "id": "13",
+                    "name": "Adaptability",
+                    "category": "soft",
+                    "percentage": 82,
+                    "description": "Learning new tools and requirements quickly.",
+                    "icon": "refresh"
+                }
+            ]
+        },
+        "educations": [
+            {
+                "id": "1",
+                "institution": "SMKN 2 Banjarmasin",
+                "degree": "Vocational High School",
+                "field": "Software Engineering and Game Development",
+                "start_date": "2024",
+                "end_date": "Now",
+                "period": "2024 — Now",
+                "description": "Studying web programming, databases, and interface design through real projects."
+            },
+            {
+                "id": "2",
+                "institution": "SMPN 1 Banjarmasin",
+                "degree": "Junior High School",
+                "field": null,
+                "start_date": "2021",
+                "end_date": "2024",
+                "period": "2021 — 2024",
+                "description": "First became interested in digital design and web development."
+            }
+        ],
+        "certificates": [
+            {
+                "id": "1",
+                "title": "UX Design Fundamentals",
+                "issuer": "Dicoding Indonesia",
+                "issued_at": "2025-06-15",
+                "expires_at": null,
+                "credential_id": null,
+                "credential_url": "https://www.dicoding.com/",
+                "image_url": null,
+                "description": "User research, wireframing, and usability testing fundamentals."
+            },
+            {
+                "id": "2",
+                "title": "Front-End Web Development",
+                "issuer": "Dicoding Indonesia",
+                "issued_at": "2025-09-20",
+                "expires_at": null,
+                "credential_id": null,
+                "credential_url": "https://www.dicoding.com/",
+                "image_url": null,
+                "description": "HTML, CSS, JavaScript, and responsive interface development."
+            },
+            {
+                "id": "3",
+                "title": "Figma for UI Design",
+                "issuer": "Coursera",
+                "issued_at": "2024-11-10",
+                "expires_at": null,
+                "credential_id": null,
+                "credential_url": "https://www.coursera.org/",
+                "image_url": null,
+                "description": "Components, prototyping, and collaboration in Figma."
+            }
+        ],
+        "experiences": [
+            {
+                "id": "1",
+                "type": "education",
+                "type_label": "Education",
+                "title": "Software Engineering Student",
+                "company": "SMKN 2 Banjarmasin",
+                "location": "Banjarmasin, Indonesia",
+                "date_range": "2024 — Now",
+                "description": "Learning software engineering and UI/UX fundamentals, then applying them to school and organisation projects.",
+                "tags": [
+                    "Figma",
+                    "Tailwind CSS",
+                    "Laravel",
+                    "UI/UX"
+                ],
+                "url": null
+            },
+            {
+                "id": "2",
+                "type": "work",
+                "type_label": "Work",
+                "title": "UI/UX Designer",
+                "company": "Modulia",
+                "location": "Remote",
+                "date_range": "2025 — 2026",
+                "description": "Designing exam flows, interface components, and prototypes for the Modulia online exam platform.",
+                "tags": [
+                    "Figma",
+                    "UI/UX",
+                    "Design System"
+                ],
+                "url": null
+            },
+            {
+                "id": "3",
+                "type": "internship",
+                "type_label": "PLK / Internship",
+                "title": "Internship (PLK)",
+                "company": "PT Digital Nusantara",
+                "location": "Banjarmasin, Indonesia",
+                "date_range": "2025",
+                "description": "Helped the product team improve a dashboard interface and document UI components.",
+                "tags": [
+                    "UI/UX",
+                    "Figma",
+                    "Documentation"
+                ],
+                "url": null
+            },
+            {
+                "id": "4",
+                "type": "organization",
+                "type_label": "Organisation",
+                "title": "Student Council Member",
+                "company": "SMKN 2 Banjarmasin",
+                "location": "Banjarmasin, Indonesia",
+                "date_range": "2024 — 2025",
+                "description": "Managed school event publications and collaborated with other divisions.",
+                "tags": [
+                    "Communication",
+                    "Teamwork"
+                ],
+                "url": null
+            },
+            {
+                "id": "5",
+                "type": "competition",
+                "type_label": "Competition",
+                "title": "Web Design Competition",
+                "company": "Universitas Lambung Mangkurat",
+                "location": "Banjarmasin, Indonesia",
+                "date_range": "2025",
+                "description": "Created an education website concept and prototype with a team, then presented it to the judges.",
+                "tags": [
+                    "Figma",
+                    "Web Design",
+                    "Presentation"
+                ],
+                "url": null
+            }
+        ],
+        "projects": [
+            {
+                "id": "1",
+                "slug": "exam-platform",
+                "title": "Exam Platform",
+                "excerpt": "Modulia helps teachers create, schedule, and grade exams in one simple workflow.",
+                "description": "An online exam platform for schools and tutoring centres.",
+                "category": "web-app",
+                "category_label": "Web app",
+                "tags": [
+                    "Figma",
+                    "Tailwind CSS",
+                    "Laravel",
+                    "UI/UX"
+                ],
+                "url": "https://suj.modulia.web.id/",
+                "repo_url": null,
+                "image_url": null,
+                "status": "published",
+                "is_featured": true,
+                "content": "<p>Modulia started from a simple problem: teachers spend too much time preparing and grading paper exams. I mapped the teacher workflow, created wireframes, and built a Figma prototype with the team.</p><h3>Process</h3><ul><li>User research with three teachers and two students.</li><li>Information architecture and user flows for exam creation.</li><li>A small design system for question cards, timers, and results.</li><li>Front-end implementation with Tailwind CSS and API integration.</li></ul><h3>Outcome</h3><p>The prototype was used for an internal demo and became the foundation of the Modulia platform.</p>",
+                "gallery": [],
+                "created_at": "2026-11-16T12:04:06+00:00"
+            },
+            {
+                "id": "2",
+                "slug": "portfolio-website",
+                "title": "Portfolio Website",
+                "excerpt": "This portfolio connects Next.js on Vercel with Laravel and Filament on Render.",
+                "description": "A bilingual portfolio with a Filament admin and a public API.",
+                "category": "web-app",
+                "category_label": "Web app",
+                "tags": [
+                    "Next.js",
+                    "Laravel",
+                    "Filament",
+                    "Tailwind CSS"
+                ],
+                "url": null,
+                "repo_url": "https://github.com/PlutoniumQI/Portofolio-Code",
+                "image_url": null,
+                "status": "published",
+                "is_featured": true,
+                "content": "<p>I wanted a portfolio I could update without touching code. A Filament admin stores content in Postgres, the API serves it in two languages, and Next.js renders the pages with ISR.</p><h3>What I learned</h3><ul><li>Designing a bilingual content schema.</li><li>Uploading assets to GitHub so they survive free hosting.</li><li>Keeping performance and accessibility solid on mobile.</li></ul>",
+                "gallery": [],
+                "created_at": "2026-11-16T12:04:06+00:00"
+            },
+            {
+                "id": "3",
+                "slug": "modulia-design-system",
+                "title": "Modulia Design System",
+                "excerpt": "A consistent set of Figma components for the product and engineering team.",
+                "description": "Components and design tokens for the Modulia product suite.",
+                "category": "design-system",
+                "category_label": "Design system",
+                "tags": [
+                    "Figma",
+                    "Design System",
+                    "UI/UX"
+                ],
+                "url": null,
+                "repo_url": null,
+                "image_url": null,
+                "status": "coming_soon",
+                "is_featured": false,
+                "content": "<p>This design system unifies the colours, typography, spacing, and form components used across the exam platform. The goal is to reduce repeated design decisions and speed up handoff.</p><h3>Contents</h3><ul><li>Colour and typography tokens.</li><li>Button, input, modal, and table components.</li><li>Usage documentation and state examples.</li></ul>",
+                "gallery": [],
+                "created_at": "2026-11-16T12:04:06+00:00"
+            }
+        ],
+        "project_categories": [
+            {
+                "value": "web-app",
+                "label": "Web app",
+                "count": 2
+            },
+            {
+                "value": "design-system",
+                "label": "Design system",
+                "count": 1
+            }
+        ],
+        "testimonials": [
+            {
+                "id": "1",
+                "name": "Rizky Pratama",
+                "role": "Founder",
+                "company": "Modulia",
+                "quote": "Resky turns complicated product requirements into simple, understandable flows.",
+                "category": "client",
+                "category_label": "Client",
+                "avatar_url": null,
+                "rating": 5
+            },
+            {
+                "id": "2",
+                "name": "Aulia Rahma",
+                "role": "UI/UX Mentor",
+                "company": "Modulia",
+                "quote": "He learns quickly, stays open to feedback, and always brings solutions to the discussion.",
+                "category": "mentor",
+                "category_label": "Mentor",
+                "avatar_url": null,
+                "rating": 5
+            },
+            {
+                "id": "3",
+                "name": "Hendra Saputra",
+                "role": "Software Engineering Teacher",
+                "company": "SMKN 2 Banjarmasin",
+                "quote": "His projects are tidy and show a strong understanding of the design process.",
+                "category": "teacher",
+                "category_label": "Teacher",
+                "avatar_url": null,
+                "rating": 5
+            },
+            {
+                "id": "4",
+                "name": "Nabila Putri",
+                "role": "Classmate",
+                "company": "SMKN 2 Banjarmasin",
+                "quote": "Always ready to help and reliable in group work.",
+                "category": "peer",
+                "category_label": "Peer",
+                "avatar_url": null,
+                "rating": 5
+            }
+        ],
+        "testimonial_categories": [
+            {
+                "value": "client",
+                "label": "Client"
+            },
+            {
+                "value": "mentor",
+                "label": "Mentor"
+            },
+            {
+                "value": "teacher",
+                "label": "Teacher"
+            },
+            {
+                "value": "peer",
+                "label": "Peer"
+            }
+        ],
+        "posts": [
+            {
+                "id": "2",
+                "slug": "figma-to-nextjs",
+                "title": "From Figma to Next.js",
+                "excerpt": "What I pay attention to when turning a design into responsive components.",
+                "cover_url": null,
+                "category": "Development",
+                "tags": [
+                    "Next.js",
+                    "Tailwind CSS",
+                    "Accessibility"
+                ],
+                "published_at": "2026-11-12T12:04:06+00:00",
+                "is_featured": false,
+                "reading_time": 1,
+                "body": "<p>Handoff is not just copying colours and measurements. There are decisions about spacing, states, and small-screen behaviour that need to be resolved together.</p><h3>Three habits that help</h3><ul><li>Naming components with the same language in Figma and code.</li><li>Choosing breakpoints before writing CSS.</li><li>Testing with a keyboard and screen reader from the start.</li></ul><p>The sooner gaps between design and implementation are found, the cheaper they are to fix.</p>"
+            },
+            {
+                "id": "1",
+                "slug": "designing-for-clarity",
+                "title": "Designing for Clarity",
+                "excerpt": "Notes on simplifying an exam flow without removing the features people need.",
+                "cover_url": null,
+                "category": "Design notes",
+                "tags": [
+                    "UI/UX",
+                    "Figma",
+                    "Case study"
+                ],
+                "published_at": "2026-11-04T12:04:06+00:00",
+                "is_featured": true,
+                "reading_time": 1,
+                "body": "<p>Good design often feels simple because many hard decisions are hidden neatly. While working on Modulia, I learned that reducing choices does not always mean reducing capability.</p><h3>Start with a question</h3><p>I interviewed teachers and students to understand which steps made them hesitate most. From there, I created one primary flow and moved advanced options somewhere they would not interrupt it.</p><h3>Test, then refine</h3><p>I tested the prototype with real tasks. Small changes to labels and field order had more impact than adding new features.</p>"
+            }
+        ]
+    }
+}

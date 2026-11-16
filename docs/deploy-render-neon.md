@@ -9,9 +9,9 @@ Postgres               Neon Free
 images + PDFs          public GitHub assets repository
 ```
 
-Phase 1 covers the infrastructure in this document. The API content endpoints,
-GitHub uploader, and frontend revalidation are phase 2 work. Until they land,
-the public site still reads the legacy `src/data/portfolio.json`.
+The backend API, GitHub uploader, and the Next.js bilingual frontend are
+implemented. This document covers deploying them: Neon, Render, the assets
+repository, Vercel, and DNS.
 
 ## Cost and limits
 
@@ -130,7 +130,7 @@ git status --short
    | `GITHUB_ASSETS_REPO` | `portfolio-assets` |
    | `FRONTEND_URL` | `http://localhost:3000` temporarily |
    | `FRONTEND_ALLOWED_ORIGINS` | `http://localhost:3000,http://127.0.0.1:3000` temporarily |
-   | `FRONTEND_REVALIDATE_URL` | `https://your-domain.com/api/revalidate` (placeholder is fine until phase 2) |
+   | `FRONTEND_REVALIDATE_URL` | `https://your-domain.com/api/revalidate` |
    | `FRONTEND_REVALIDATE_SECRET` | a long random value; reuse it on Vercel later |
    | `SEED_DATABASE` | `false` for the first boot |
 
@@ -203,10 +203,14 @@ redirects to use the final host from the start.
    | Variable | Value |
    |---|---|
    | `NEXT_PUBLIC_SITE_URL` | `https://your-domain.com` |
-   | `NEXT_PUBLIC_DEFAULT_LOCALE` | `id` |
-   | `NEXT_PUBLIC_API_URL` | `https://api.your-domain.com` |
    | `API_URL` | `https://api.your-domain.com` |
-   | `REVALIDATE_SECRET` | same value as Render's `FRONTEND_REVALIDATE_SECRET` |
+   | `FRONTEND_REVALIDATE_SECRET` | same value as Render's `FRONTEND_REVALIDATE_SECRET` |
+   | `PORTFOLIO_REVALIDATE_SECONDS` | `300` (optional) |
+
+   `NEXT_PUBLIC_SITE_URL` is the only public variable: it is baked into the
+   build for canonical URLs, the sitemap, and Open Graph tags. Forms post to
+   the frontend's own `/api/messages` route, which forwards to `API_URL`
+   server-side, so no public API URL or CORS setup is needed in the browser.
 
 5. Deploy.
 6. Add `your-domain.com` and `www.your-domain.com` in Vercel → Settings →
@@ -268,7 +272,6 @@ If the deployed frontend cannot reach Render, create `.env.local` in the repo
 root:
 
 ```text
-NEXT_PUBLIC_API_URL=http://127.0.0.1:8000
 API_URL=http://127.0.0.1:8000
 ```
 
@@ -304,23 +307,28 @@ it in Vercel.
 | Filament CSS/JS 404 | `filament:assets` failed or `public` not writable | Check startup logs; rebuild the image |
 | `419 Page Expired` on admin login | Cookie/host mismatch | Clear cookies, set `APP_URL` to the exact HTTPS origin, keep `SESSION_SECURE_COOKIE=true` |
 | Admin redirects to `http://` | Proxy headers not trusted | `bootstrap/app.php` trusts proxies; check `X-Forwarded-Proto` reaches Laravel |
-| Uploaded image disappears after restart | Render's filesystem is ephemeral | Use the GitHub URL field until phase 2; the GitHub uploader is not live yet |
+| Uploaded image disappears after restart | Render's filesystem is ephemeral and `GITHUB_TOKEN` is missing or invalid | Set a valid token; check the upload error in the admin |
 | Render deploy fails during `composer install` | PHP version or missing extension | The lock file requires PHP >= 8.4.1; use the `8.4-fpm-nginx` image |
 | Render health check times out | App listens on the wrong port | `NGINX_HTTP_PORT=10000` and `SSL_MODE=off` must be set |
 | CORS error in the browser | Origin not listed exactly | Add scheme + host (+ port), no trailing slash; restart Render |
 | `SEED_DATABASE` change does nothing | Env var not saved, or seed logs show an error | Save the env var, wait for the restart, inspect logs |
 | Free instance hours exhausted | More than one always-on service | Check Render usage; keep only `portfolio-api` awake |
 
-## 13. What phase 2 adds
+## 13. Content workflow after deploy
 
-The following are intentionally not live yet:
+Everything is edited in the production admin at `https://api.your-domain.com/admin`:
 
-- `GET /api/portfolio` and the rest of the read-only content API.
-- `POST /api/messages` with validation, honeypot, and rate limiting.
-- The GitHub uploader in Filament (the token/config are already wired).
-- `POST /api/revalidate` on the Next.js side and the Filament publish action.
-- Frontend API client, bilingual routes, light/dark theme, and all new pages.
-- Replacing `portfolio:export` / `src/data/portfolio.json`.
+1. Create or edit content. Project statuses are `draft` (hidden), `published`, and
+   `coming_soon` (visible with a badge).
+2. Upload images through the form. They are committed to `portfolio-assets` and served
+   from `raw.githubusercontent.com` URLs, so they survive Render restarts.
+3. Approve guestbook entries in **Messages & guestbook**.
+4. Open **Settings → Publish changes → Revalidate live site** to refresh the Vercel
+   cache immediately.
 
-Until phase 2, use raw GitHub URLs in the admin's image URL fields and keep
-the local Filament + static export workflow for content.
+Pages also refresh on their own every `PORTFOLIO_REVALIDATE_SECONDS` (default 300).
+New project and blog slugs are rendered on demand, so they work without a redeploy.
+
+The committed `src/data/portfolio-fallback.json` is only a build/offline snapshot.
+Regenerate it with `npm run fallback` if you want it to match production content, then
+commit and push.

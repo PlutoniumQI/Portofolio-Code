@@ -8,8 +8,8 @@ class Media
 {
     /**
      * Resolve a stored upload or an external URL into something a browser can
-     * load. The GitHub disk returns a raw.githubusercontent.com URL; the local
-     * public disk returns an absolute /storage URL.
+     * load. Only legacy records still have a path; new content stores public
+     * URLs directly.
      */
     public static function url(?string $path, ?string $disk = null, ?string $external = null): ?string
     {
@@ -34,6 +34,6 @@ class Media
 
     public static function defaultDisk(): string
     {
-        return filled(config('portfolio.github.token')) ? 'github' : 'public';
+        return 'public';
     }
 }

@@ -1,12 +1,12 @@
 # Backend — Laravel 13 + Filament 5
 
 This app is both the local admin and the production API for the portfolio. Locally it uses SQLite and
-the `public` disk; in production it runs on Render Free (Docker) with Neon Postgres and GitHub-hosted
-uploads.
+the `public` disk; in production it runs on Apply.Build Free (Docker) with Neon Postgres, and media is
+stored as public URLs.
 
 See the root [`README.md`](../README.md) for local setup, [`AGENTS.md`](AGENTS.md) for agent-facing
-rules, and [`../docs/deploy-render-neon.md`](../docs/deploy-render-neon.md) for the deployment
-runbook.
+rules, and [`../docs/deploy-apply-build-neon.md`](../docs/deploy-apply-build-neon.md) for the
+deployment runbook.
 
 Quick start:
 
@@ -26,6 +26,6 @@ Admin: <http://127.0.0.1:8000/admin>
 Production health checks:
 
 ```text
-GET /up          Render health check
+GET /up          Apply.Build health check
 GET /api/health  lightweight JSON liveness endpoint
 ```

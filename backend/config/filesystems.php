@@ -48,28 +48,10 @@ return [
         ],
 
         /*
-         | Uploads are committed to the public portfolio-assets repository so
-         | they survive Render restarts. The custom driver lives in
-         | App\Filesystem\GitHubAdapter and is registered by AppServiceProvider.
+         | Uploads are not used in production. Images and PDFs are pasted into
+         | the admin as public URLs, so only the local public disk is kept for
+         | legacy records.
          */
-        'github' => [
-            'driver' => 'github',
-            'token' => env('GITHUB_TOKEN'),
-            'owner' => env('GITHUB_ASSETS_OWNER'),
-            'repo' => env('GITHUB_ASSETS_REPO'),
-            'branch' => env('GITHUB_ASSETS_BRANCH', 'main'),
-            'root' => trim((string) env('GITHUB_ASSETS_PATH', 'portfolio'), '/'),
-            'api_url' => env('GITHUB_API_URL', 'https://api.github.com'),
-            'url' => rtrim(sprintf(
-                'https://raw.githubusercontent.com/%s/%s/%s/%s',
-                env('GITHUB_ASSETS_OWNER', ''),
-                env('GITHUB_ASSETS_REPO', ''),
-                env('GITHUB_ASSETS_BRANCH', 'main'),
-                trim((string) env('GITHUB_ASSETS_PATH', 'portfolio'), '/'),
-            ), '/'),
-            'throw' => true,
-            'report' => false,
-        ],
 
         's3' => [
             'driver' => 's3',

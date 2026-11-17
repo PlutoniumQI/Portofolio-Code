@@ -6,6 +6,6 @@ set -e
 echo "Publishing Filament assets..."
 php artisan filament:assets --ansi
 
-# Keep the legacy public-disk uploads browsable during the migration to the
-# GitHub uploader. The Render filesystem is ephemeral, so this is temporary.
+# Keep legacy public-disk uploads browsable. New media is stored as external
+# URLs, so this link only matters for older records.
 php artisan storage:link --ansi || true

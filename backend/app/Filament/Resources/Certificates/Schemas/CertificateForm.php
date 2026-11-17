@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\Certificates\Schemas;
 
-use App\Filament\Support\PortfolioUpload;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -73,15 +72,11 @@ class CertificateForm
 
                 Section::make('Preview image')
                     ->schema([
-                        Grid::make(2)
-                            ->schema([
-                                PortfolioUpload::image('image_path', 'certificates', 'Certificate image'),
-                                TextInput::make('image_url')
-                                    ->label('External image URL')
-                                    ->url()
-                                    ->maxLength(2048),
-                            ]),
-                        PortfolioUpload::diskField(),
+                        TextInput::make('image_url')
+                            ->label('Certificate image URL')
+                            ->url()
+                            ->maxLength(2048)
+                            ->placeholder('https://raw.githubusercontent.com/...'),
                         Toggle::make('is_active')
                             ->label('Show on the public site')
                             ->default(true),

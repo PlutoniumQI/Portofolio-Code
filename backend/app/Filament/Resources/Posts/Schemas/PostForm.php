@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\Posts\Schemas;
 
-use App\Filament\Support\PortfolioUpload;
 use App\Models\Post;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\RichEditor;
@@ -86,15 +85,11 @@ class PostForm
 
                 Section::make('Cover image')
                     ->schema([
-                        Grid::make(2)
-                            ->schema([
-                                PortfolioUpload::image('cover_path', 'blog', 'Cover'),
-                                TextInput::make('cover_url')
-                                    ->label('External cover URL')
-                                    ->url()
-                                    ->maxLength(2048),
-                            ]),
-                        PortfolioUpload::diskField('cover_disk'),
+                        TextInput::make('cover_url')
+                            ->label('Cover image URL')
+                            ->url()
+                            ->maxLength(2048)
+                            ->placeholder('https://raw.githubusercontent.com/...'),
                     ]),
             ]);
     }

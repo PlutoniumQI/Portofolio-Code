@@ -1,9 +1,9 @@
 # Backend — Filament admin + API
 
-Laravel 13 + Filament 5. Runs locally with SQLite and the public disk; production runs on **Render
-Free** (Docker) at `api.<domain>` with **Neon Postgres** and a public GitHub assets repository. Read
-`../AGENTS.md` first and [`../docs/deploy-render-neon.md`](../docs/deploy-render-neon.md) for the
-deployment runbook.
+Laravel 13 + Filament 5. Runs locally with SQLite and the public disk; production runs on
+**Apply.Build Free** (Docker) at `api.<domain>` with **Neon Postgres**, and media is pasted in as
+public URLs. Read `../AGENTS.md` first and
+[`../docs/deploy-apply-build-neon.md`](../docs/deploy-apply-build-neon.md) for the deployment runbook.
 
 ## Local development
 
@@ -30,10 +30,11 @@ deployment runbook.
 
 ## Production
 
-- `../render.yaml` defines the `portfolio-api` service. `Dockerfile` uses
-  `serversideup/php:8.4-fpm-nginx` and installs `intl` + `pdo_pgsql`.
-- Environment reference: `.env.production.example`. Real values (APP_KEY, DB_URL, ADMIN_PASSWORD,
-  GITHUB_TOKEN) live only in Render. Never commit `.env`.
+- `../Dockerfile` (repository root) is the Apply.Build build file. It uses
+  `serversideup/php:8.4-fpm-nginx`, installs `intl` + `pdo_pgsql`, and copies this directory into the
+  image.
+- Environment reference: `.env.production.example`. Real values (APP_KEY, DB_URL, ADMIN_PASSWORD)
+  live only in Apply.Build. Never commit `.env`.
 - Startup scripts in `docker/entrypoint.d/` cache config/views, publish Filament assets, run
   migrations when `RUN_MIGRATIONS=true`, and seed when `SEED_DATABASE=true`. Seeders must be
   idempotent because restarts re-run them while the flag is on.
@@ -42,8 +43,8 @@ deployment runbook.
   in production.
 - The admin user is seeded from `ADMIN_EMAIL` / `ADMIN_PASSWORD`. Changing those env vars later does
   not update an existing password; use the Filament profile page.
-- Uploads use `GITHUB_TOKEN` (fine-grained, Contents: Read and write, one repository). If the token
-  is empty locally, uploads fall back to the `public` disk.
+- The admin is URL-only: paste public image/PDF URLs into the cover, gallery, certificate, avatar,
+  blog cover, and CV fields. There is no upload disk and no GitHub token in production.
 - The API lives in `routes/api.php`:
   - `GET /api/health` — liveness.
   - `GET /api/portfolio?locale=id|en` — localized profile, skills, education, certificates,
@@ -62,8 +63,8 @@ deployment runbook.
   `FRONTEND_REVALIDATE_URL` (the Vercel `/api/revalidate` route) with
   `FRONTEND_REVALIDATE_SECRET`. Leave both empty locally; ISR refreshes on its own schedule.
   The page also has a collapsed legacy section that calls `portfolio:export`.
-- Render routes traffic to port `10000`; `NGINX_HTTP_PORT=10000` and `SSL_MODE=off` are required for
-  the `serversideup/php` image.
+- Apply.Build routes to the port configured in the app settings; the image listens on `8080`
+  (`NGINX_HTTP_PORT=8080`, `SSL_MODE=off`), and the health check path is `/up`.
 
-Do not add a Vercel build for this app, a PHP runtime on Vercel, or a queue worker on Render Free
-without checking the plan and the free instance limits.
+Do not add a Vercel build for this app, a PHP runtime on Vercel, or a queue worker on the free
+512 MiB instance without checking the limits.

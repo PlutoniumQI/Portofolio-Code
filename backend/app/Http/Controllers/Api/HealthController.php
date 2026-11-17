@@ -10,8 +10,8 @@ class HealthController extends Controller
     /**
      * Lightweight liveness endpoint for the frontend and uptime monitors.
      *
-     * It intentionally does not touch the database so it stays fast even
-     * while the Neon compute is waking up. Render checks /up separately.
+     * It intentionally does not touch the database so it stays fast.
+     * Apply.Build checks /up separately.
      */
     public function __invoke(): JsonResponse
     {

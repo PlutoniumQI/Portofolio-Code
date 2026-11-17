@@ -12,8 +12,8 @@ const revalidateSeconds = Number(process.env.PORTFOLIO_REVALIDATE_SECONDS ?? 300
 
 /**
  * During `next build`, use the committed snapshot instead of the API. Vercel
- * builds should never depend on the Render free instance being awake; ISR
- * fetches live content on the first revalidation after deployment.
+ * builds should never depend on the backend being awake; ISR fetches live
+ * content on the first revalidation after deployment.
  */
 const isProductionBuild = process.env.NEXT_PHASE === 'phase-production-build';
 
@@ -45,7 +45,7 @@ async function apiFetch<T>(path: string, tags: string[], fallbackValue: T, reval
 
 /**
  * Localized portfolio payload. Falls back to the committed snapshot when the
- * Render free instance is asleep or unreachable, so pages always render.
+ * backend is unreachable, so pages always render.
  */
 export async function getPortfolio(locale: Locale): Promise<Portfolio> {
   const data = await apiFetch<Portfolio>(

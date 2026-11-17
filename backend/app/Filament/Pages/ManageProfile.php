@@ -2,7 +2,6 @@
 
 namespace App\Filament\Pages;
 
-use App\Filament\Support\PortfolioUpload;
 use App\Models\Profile;
 use BackedEnum;
 use Filament\Forms\Components\RichEditor;
@@ -129,24 +128,18 @@ class ManageProfile extends Page
                     ]),
 
                 Section::make('Media')
-                    ->description('Avatar and digital CV are stored in the GitHub assets repository in production.')
+                    ->description('Paste public URLs. GitHub raw links work for both the avatar and the CV PDF.')
                     ->schema([
-                        Grid::make(2)
-                            ->schema([
-                                PortfolioUpload::image('avatar_path', 'profile', 'Avatar'),
-                                TextInput::make('avatar_url')
-                                    ->label('External avatar URL')
-                                    ->url()
-                                    ->maxLength(2048),
-                                PortfolioUpload::document('cv_path', 'cv', 'CV PDF')
-                                    ->helperText('Uploaded to GitHub. Visitors download it from the CV section.'),
-                                TextInput::make('cv_url')
-                                    ->label('External CV URL')
-                                    ->url()
-                                    ->maxLength(2048),
-                            ]),
-                        PortfolioUpload::diskField('avatar_disk'),
-                        PortfolioUpload::diskField('cv_disk'),
+                        TextInput::make('avatar_url')
+                            ->label('Avatar image URL')
+                            ->url()
+                            ->maxLength(2048)
+                            ->placeholder('https://raw.githubusercontent.com/...'),
+                        TextInput::make('cv_url')
+                            ->label('CV PDF URL')
+                            ->url()
+                            ->maxLength(2048)
+                            ->helperText('Visitors download the CV from this link.'),
                     ]),
             ])
             ->statePath('data');

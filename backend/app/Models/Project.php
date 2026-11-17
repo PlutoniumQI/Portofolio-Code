@@ -91,7 +91,13 @@ class Project extends Model
     public function galleryUrls(): array
     {
         return collect($this->gallery ?? [])
-            ->map(fn (string $path): ?string => Media::url($path, $this->image_disk))
+            ->map(function (string $path): ?string {
+                if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+                    return $path;
+                }
+
+                return Media::url($path, $this->image_disk);
+            })
             ->filter()
             ->values()
             ->all();

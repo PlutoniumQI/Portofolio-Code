@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources\Projects\Schemas;
 
-use App\Filament\Support\PortfolioUpload;
 use App\Models\Project;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
@@ -102,21 +102,24 @@ class ProjectForm
                     ]),
 
                 Section::make('Media')
-                    ->description('Upload an image or paste a public URL. An upload wins when both are filled.')
+                    ->description('Paste public image URLs. Uploads are not stored, so GitHub raw URLs are recommended.')
                     ->schema([
-                        Grid::make(2)
-                            ->schema([
-                                PortfolioUpload::image('image_path', 'projects', 'Cover image')
-                                    ->helperText('Stored in the GitHub assets repository in production.'),
-                                TextInput::make('image_url')
-                                    ->label('External image URL')
+                        TextInput::make('image_url')
+                            ->label('Cover image URL')
+                            ->url()
+                            ->maxLength(2048)
+                            ->placeholder('https://raw.githubusercontent.com/...'),
+                        Repeater::make('gallery')
+                            ->label('Gallery image URLs')
+                            ->simple(
+                                TextInput::make('url')
                                     ->url()
                                     ->maxLength(2048)
                                     ->placeholder('https://raw.githubusercontent.com/...'),
-                            ]),
-                        PortfolioUpload::gallery('gallery', 'projects/gallery', 'Gallery images')
+                            )
+                            ->addActionLabel('Add image URL')
+                            ->defaultItems(0)
                             ->columnSpanFull(),
-                        PortfolioUpload::diskField(),
                     ]),
 
                 Section::make('Publishing')

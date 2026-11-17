@@ -1,0 +1,31 @@
+# Apply.Build builds from the repository root. Only backend/ is copied into
+# the image, so keep the build context small and free of secrets.
+.git
+.gitignore
+node_modules
+.next
+out
+src
+public
+docs
+*.md
+
+.env
+.env.local
+.env.*.local
+backend/.env
+backend/.env.*
+
+backend/node_modules
+backend/vendor
+backend/tests
+backend/.phpunit.cache
+backend/database/*.sqlite
+backend/storage/logs/*
+backend/storage/framework/cache/*
+backend/storage/framework/sessions/*
+backend/storage/framework/views/*
+backend/storage/app/*.sqlite
+backend/public/storage
+backend/public/js/filament
+backend/public/css/filament

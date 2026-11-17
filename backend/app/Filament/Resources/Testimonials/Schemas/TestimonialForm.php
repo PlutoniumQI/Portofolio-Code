@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\Testimonials\Schemas;
 
-use App\Filament\Support\PortfolioUpload;
 use App\Models\Testimonial;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -79,15 +78,11 @@ class TestimonialForm
 
                 Section::make('Avatar')
                     ->schema([
-                        Grid::make(2)
-                            ->schema([
-                                PortfolioUpload::image('avatar_path', 'testimonials', 'Avatar'),
-                                TextInput::make('avatar_url')
-                                    ->label('External avatar URL')
-                                    ->url()
-                                    ->maxLength(2048),
-                            ]),
-                        PortfolioUpload::diskField('avatar_disk'),
+                        TextInput::make('avatar_url')
+                            ->label('Avatar image URL')
+                            ->url()
+                            ->maxLength(2048)
+                            ->placeholder('https://raw.githubusercontent.com/...'),
                     ]),
             ]);
     }

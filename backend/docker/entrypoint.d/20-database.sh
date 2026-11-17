@@ -1,8 +1,8 @@
 #!/bin/sh
 set -e
 
-# Run migrations on container start when explicitly enabled. Render Free runs a
-# single instance, so this is safe. Neon may be cold, hence the retries.
+# Run migrations on container start when explicitly enabled. Apply.Build runs a
+# single container, so this is safe. Neon may be cold, hence the retries.
 if [ "${RUN_MIGRATIONS:-false}" = "true" ]; then
     attempt=1
 

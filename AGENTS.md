@@ -13,14 +13,14 @@ This repo contains two apps:
 - **`/` (Next.js 16, App Router)** — the public bilingual site. Deployed to Vercel Hobby at the
   user's domain. Routes are locale-prefixed (`/id/...`, `/en/...`); `/` redirects to `/id`.
 - **`backend/` (Laravel 13 + Filament 5)** — the admin and public API. Local development uses SQLite
-  and the public disk; production runs on **Render Free (Docker)** at `api.<domain>`, with **Neon
-  Postgres** and a public **GitHub assets repository**.
+  and the public disk; production runs on **Apply.Build Free (Docker)** at `api.<domain>`, with
+  **Neon Postgres** and media served from public URLs.
 
 Content flow:
 
 ```text
 Filament edit -> Neon Postgres -> GET /api/portfolio -> Next.js ISR -> Vercel
-uploads       -> GitHub assets repo -> raw.githubusercontent.com URLs
+media URL     -> raw.githubusercontent.com (pasted in the admin, no upload step)
 Publish       -> POST /api/revalidate on Vercel
 ```
 
@@ -30,20 +30,20 @@ the retired one-page app. Do not restore them or the Contentful integration.
 
 ## Infrastructure files
 
-- `render.yaml` — Render Blueprint for `portfolio-api` (Docker, Free plan, health check `/up`).
-- `backend/Dockerfile` — `serversideup/php:8.4-fpm-nginx`; installs `intl` and `pdo_pgsql`.
+- `Dockerfile` — root build file for Apply.Build; `serversideup/php:8.4-fpm-nginx`, installs `intl`
+  and `pdo_pgsql`, copies the app from `backend/`.
+- `.dockerignore` — keeps the root build context small; excludes the Next.js app and secrets.
 - `backend/docker/entrypoint.d/` — startup scripts: config/view cache, Filament assets, opt-in
   migrations and seeding.
 - `backend/config/cors.php` — allows only `FRONTEND_ALLOWED_ORIGINS`.
-- `backend/config/portfolio.php` — export paths, GitHub upload settings, frontend revalidation URL
-  and secret.
+- `backend/config/portfolio.php` — export/fallback paths and the frontend revalidation URL and secret.
 - `backend/routes/api.php` — public API: `health`, `portfolio`, `projects`, `posts`, `guestbook`,
   `messages`.
-- `backend/.env.production.example` — production env reference. Real secrets live only in Render.
+- `backend/.env.production.example` — production env reference. Real secrets live only in Apply.Build.
 - `.env.example` — frontend env reference: `NEXT_PUBLIC_SITE_URL`, `API_URL`,
   `FRONTEND_REVALIDATE_SECRET`, `PORTFOLIO_REVALIDATE_SECONDS`.
-- `docs/deploy-render-neon.md` — full runbook for Neon, the GitHub token, Render, Vercel, DNS,
-  keep-alive, security, and troubleshooting.
+- `docs/deploy-apply-build-neon.md` — full runbook for Neon, Apply.Build, media URLs, Vercel, DNS,
+  security, and troubleshooting.
 
 ## Source of truth and generated files
 
@@ -95,7 +95,7 @@ php artisan portfolio:fallback
 Optional Docker build check (requires Docker Desktop):
 
 ```powershell
-docker build -t portfolio-api .\backend
+docker build -t portfolio-api .
 ```
 
 **PHP caveat:** all backend commands need `ext-intl`; the default `php` on this Windows machine
@@ -110,13 +110,13 @@ Without that, Filament tables fail with `The "intl" PHP extension is required to
 
 ## Backend rules
 
-- Production is public: Render Free Docker + Neon Postgres. Keep `APP_DEBUG=false`, `APP_URL` on
-  HTTPS, and secrets only in Render environment variables.
+- Production is public: Apply.Build Free Docker + Neon Postgres. Keep `APP_DEBUG=false`, `APP_URL` on
+  HTTPS, and secrets only in Apply.Build environment variables.
 - Local development remains SQLite + the `public` disk. Never commit `backend/.env`.
-- `render.yaml` is the source of truth for non-secret production env vars. Add new production
-  variables there **and** to `backend/.env.production.example`.
+- Apply.Build environment variables are the source of truth for production. Add new non-secret
+  variables to `backend/.env.production.example` as well; secrets stay in the dashboard only.
 - Sessions and cache use the database in production; the queue is `sync`. Do not add a queue worker
-  on Render Free without checking the plan.
+  on the free 512 MiB instance without checking the limits.
 - Migrations run at container start when `RUN_MIGRATIONS=true`. Seed only with `SEED_DATABASE=true`;
   seeders must be idempotent because restarts re-run them while the flag is on.
 - Filament assets are git-ignored and published at startup by
@@ -135,24 +135,18 @@ Without that, Filament tables fail with `The "intl" PHP extension is required to
   from **Messages & guestbook**.
 - `POST /api/messages` is throttled to 5 requests per minute per IP and has a honeypot. Do not remove
   either.
-- Do not add a Vercel build for `backend/` or PHP hosting on Vercel. The backend runs on Render as a
-  Docker service.
+- Do not add a Vercel build for `backend/` or PHP hosting on Vercel. The backend runs on Apply.Build as
+  a Docker service.
 
-## Image rules
+## Media rules
 
-- Uploads go to the public `portfolio-assets` GitHub repo via the Contents API, using a fine-grained
-  token (`GITHUB_TOKEN`, Contents: Read and write) limited to that repo. The token is never
-  committed. The uploader stores the returned `raw.githubusercontent.com` URL.
-- Local development: when `GITHUB_TOKEN` is empty, uploads fall back to Laravel's `public` disk
-  (`backend/storage/app/public`, linked with `php artisan storage:link`).
-- Upload wins if both the local upload and the external URL are set.
-- Manually pasted URLs must be **raw**
-  (`https://raw.githubusercontent.com/<user>/<repo>/<branch>/<path>`), **not**
+- The admin is **URL-only**: there are no upload fields. Paste a public image or PDF URL into the
+  matching field (cover, gallery, certificate, avatar, blog cover, CV).
+- Use **raw** URLs (`https://raw.githubusercontent.com/<user>/<repo>/<branch>/<path>`), **not**
   `github.com/.../blob/...` pages. Private repos will not render for visitors.
-- Upload size is capped by `PORTFOLIO_MAX_UPLOAD_KB` (10 MB in production, 2 MB local). Keep
-  `PHP_UPLOAD_MAX_FILE_SIZE` and `PHP_POST_MAX_SIZE` above it.
-- GitHub's Contents API accepts files up to 100 MB, but images should be compressed and kept much
-  smaller. Keep the assets repo well under 1 GB.
+- Gallery entries are a list of absolute URLs stored in the `gallery` JSON column; do not reintroduce
+  the Flysystem/GitHub uploader.
+- Apply.Build limits request bodies to 1 MiB. Keep media out of form posts; only URLs are submitted.
 - This PHP build has no JPEG/WebP GD support and no Imagick. Do not add server-side image conversion.
 - Keep plain `<img>`; no `next/image` remote domains are configured. New remote hosts work without
   config.
@@ -163,7 +157,7 @@ Without that, Filament tables fail with `The "intl" PHP extension is required to
   `src/app/page.tsx`; `/` is handled by redirects in `next.config.ts`.
 - `src/lib/api.ts` fetches `GET /api/portfolio` with ISR tags. During `next build`
   (`NEXT_PHASE === 'phase-production-build'`) it returns `portfolio-fallback.json` on purpose, so
-  Vercel builds never depend on Render being awake. Do not remove that branch or fetch the API at
+  Vercel builds never depend on the backend being awake. Do not remove that branch or fetch the API at
   build time.
 - Do not add `loading.tsx` under `[locale]` again. Streaming flushes a 200 shell before `notFound()`
   runs, so unknown project/blog slugs would return HTTP 200. `notFound()` is called in
@@ -225,16 +219,15 @@ the legacy export for it.
 - Use `127.0.0.1`, not `localhost`, for local backend commands/URLs on Windows.
 - If the local admin shows missing images after a fresh clone, run `php artisan storage:link` in
   `backend/`.
-- The Render filesystem is ephemeral. Only GitHub uploads persist; local-disk fallback uploads
-  disappear on restart.
-- Render Free spins down after 15 minutes; the first request can take about a minute. UptimeRobot
-  can ping `/up` every 5 minutes.
+- The Apply.Build filesystem is ephemeral, but nothing is stored on it: media is external URLs and
+  sessions/cache live in Postgres.
+- Apply.Build keeps the container running; there is no cold start and no keep-alive monitor.
 - Neon may suspend compute when idle. Use the **direct** connection string and `DB_SSLMODE=require`.
 - `APP_KEY` must be a valid `base64:` value. Changing it invalidates sessions and encrypted data.
-- Render routes to port `10000`; `NGINX_HTTP_PORT=10000` and `SSL_MODE=off` are required for the
-  `serversideup/php` image.
-- Deleting a project/experience in Filament does not delete its image from the GitHub assets repo;
-  remove orphaned files manually if needed.
+- Apply.Build routes to the port configured in the app settings; the image listens on `8080`
+  (`NGINX_HTTP_PORT=8080`, `SSL_MODE=off`), and the health check path is `/up`.
+- Deleting a project or post in Filament does not delete its image from the media repository; remove
+  orphaned files manually if needed.
 - Next 16: `revalidateTag(tag, 'max')` takes two arguments. If stale `.next/types` errors appear,
   delete `.next` before `tsc`.
 - PowerShell treats `src\app\[locale]\...` as a wildcard; use `-LiteralPath` (or quote with care).

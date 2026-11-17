@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 #[Fillable([
     'name',
     'category',
-    'percentage',
+    'level',
     'description_id',
     'description_en',
     'icon',
@@ -24,6 +24,14 @@ class Skill extends Model
 
     public const CATEGORY_SOFT = 'soft';
 
+    public const LEVEL_BEGINNER = 'beginner';
+
+    public const LEVEL_INTERMEDIATE = 'intermediate';
+
+    public const LEVEL_ADVANCED = 'advanced';
+
+    public const LEVEL_EXPERT = 'expert';
+
     /**
      * @return array<string, string>
      */
@@ -35,10 +43,22 @@ class Skill extends Model
         ];
     }
 
+    /**
+     * @return array<string, string>
+     */
+    public static function levels(): array
+    {
+        return [
+            self::LEVEL_BEGINNER => 'Beginner',
+            self::LEVEL_INTERMEDIATE => 'Intermediate',
+            self::LEVEL_ADVANCED => 'Advanced',
+            self::LEVEL_EXPERT => 'Expert',
+        ];
+    }
+
     protected function casts(): array
     {
         return [
-            'percentage' => 'integer',
             'sort_order' => 'integer',
             'is_active' => 'boolean',
         ];

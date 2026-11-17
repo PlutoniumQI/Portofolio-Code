@@ -195,17 +195,11 @@ export default async function CvPage({ params }: { params: Promise<{ locale: str
               </h2>
               <div className="mt-4 space-y-3">
                 {skills.hard.map((skill) => (
-                  <div key={skill.id}>
-                    <div className="flex items-baseline justify-between text-xs">
-                      <span className="text-ink-soft">{skill.name}</span>
-                      <span className="font-mono text-[9px] text-faint">{skill.percentage}%</span>
-                    </div>
-                    <div className="mt-1.5 h-1 rounded-full bg-line">
-                      <div
-                        className="h-1 rounded-full bg-accent"
-                        style={{ width: `${skill.percentage}%` }}
-                      />
-                    </div>
+                  <div key={skill.id} className="flex items-baseline justify-between gap-3 text-xs">
+                    <span className="text-ink-soft">{skill.name}</span>
+                    <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-faint">
+                      {dictionary.skills.levels[skill.level]}
+                    </span>
                   </div>
                 ))}
                 <div className="flex flex-wrap gap-1.5 pt-2">

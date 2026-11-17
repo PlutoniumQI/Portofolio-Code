@@ -50,6 +50,24 @@ class PortfolioApiTest extends TestCase
         $this->assertSame(3, $response->json('profile.stats.projects_completed'));
     }
 
+    public function test_every_skill_exposes_a_valid_level_and_no_percentage(): void
+    {
+        $response = $this->getJson('/api/portfolio');
+        $skills = collect($response->json('skills.hard'))
+            ->merge($response->json('skills.soft'));
+
+        $this->assertCount(13, $skills);
+
+        foreach ($skills as $skill) {
+            $this->assertArrayHasKey('level', $skill, $skill['name'].' is missing a level');
+            $this->assertContains($skill['level'], array_keys(Skill::levels()));
+            $this->assertArrayNotHasKey('percentage', $skill, $skill['name'].' still exposes percentage');
+        }
+
+        $this->assertSame('expert', collect($response->json('skills.hard'))->firstWhere('name', 'Figma')['level']);
+        $this->assertSame('expert', collect($response->json('skills.soft'))->firstWhere('name', 'Teamwork')['level']);
+    }
+
     public function test_english_locale_uses_english_values_and_falls_back_to_indonesian(): void
     {
         Skill::query()->where('name', 'Figma')->update(['description_en' => null]);

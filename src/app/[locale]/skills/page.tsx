@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Icon } from '@/components/ui/Icons';
 import { PageHero, Section, SectionHeading } from '@/components/ui/Section';
-import { skillIcon } from '@/components/ui/SkillBar';
+import { skillIcon, skillLevelClass } from '@/components/ui/SkillItem';
 import { getPortfolio } from '@/lib/api';
 import { getDictionary } from '@/lib/dictionaries';
 import { isLocale, localePath } from '@/lib/i18n';
@@ -78,36 +78,17 @@ export default async function SkillsPage({ params }: { params: Promise<{ locale:
                   <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-accent-line bg-accent-soft text-accent">
                     <Icon name={skillIcon(skill.name)} size={19} />
                   </span>
-                  <div>
-                    <h3 className="text-sm font-semibold text-ink">{skill.name}</h3>
-                    <p className="mt-0.5 font-mono text-[9px] uppercase tracking-[0.14em] text-faint">
-                      {dictionary.skills.proficiency}
-                    </p>
-                  </div>
+                  <h3 className="text-sm font-semibold text-ink">{skill.name}</h3>
                 </div>
-                <span className="font-mono text-lg font-semibold text-accent">{skill.percentage}%</span>
-              </div>
-
-              <div
-                className="skill-bar mt-5"
-                role="progressbar"
-                aria-valuenow={skill.percentage}
-                aria-valuemin={0}
-                aria-valuemax={100}
-                aria-label={skill.name}
-              >
                 <span
-                  style={
-                    {
-                      '--value': `${skill.percentage}%`,
-                      width: `${skill.percentage}%`,
-                    } as React.CSSProperties
-                  }
-                />
+                  className={`shrink-0 rounded-full border px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.12em] ${skillLevelClass(skill.level)}`}
+                >
+                  {dictionary.skills.levels[skill.level]}
+                </span>
               </div>
 
               {skill.description && (
-                <p className="mt-3 text-xs leading-relaxed text-muted">{skill.description}</p>
+                <p className="mt-4 text-xs leading-relaxed text-muted">{skill.description}</p>
               )}
             </article>
           ))}
@@ -131,26 +112,13 @@ export default async function SkillsPage({ params }: { params: Promise<{ locale:
                 <span className="flex h-9 w-9 items-center justify-center rounded-full border border-line bg-bg/50 text-accent">
                   <Icon name="sparkles" size={15} />
                 </span>
-                <span className="font-mono text-xs text-accent">{skill.percentage}%</span>
+                <span
+                  className={`rounded-full border px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.12em] ${skillLevelClass(skill.level)}`}
+                >
+                  {dictionary.skills.levels[skill.level]}
+                </span>
               </div>
               <h3 className="mt-4 text-sm font-semibold text-ink">{skill.name}</h3>
-              <div
-                className="skill-bar mt-3"
-                role="progressbar"
-                aria-valuenow={skill.percentage}
-                aria-valuemin={0}
-                aria-valuemax={100}
-                aria-label={skill.name}
-              >
-                <span
-                  style={
-                    {
-                      '--value': `${skill.percentage}%`,
-                      width: `${skill.percentage}%`,
-                    } as React.CSSProperties
-                  }
-                />
-              </div>
               {skill.description && (
                 <p className="mt-3 text-xs leading-relaxed text-muted">{skill.description}</p>
               )}

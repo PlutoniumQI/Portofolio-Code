@@ -10,7 +10,7 @@ import { JsonLd } from '@/components/ui/JsonLd';
 import { PostCard } from '@/components/ui/PostCard';
 import { ProjectCard } from '@/components/ui/ProjectCard';
 import { Container, Section, SectionHeading } from '@/components/ui/Section';
-import { SkillBar } from '@/components/ui/SkillBar';
+import { SkillItem } from '@/components/ui/SkillItem';
 import { SocialLinks } from '@/components/ui/SocialLinks';
 import { TestimonialCard } from '@/components/ui/TestimonialCard';
 import { getPortfolio, getSiteUrl } from '@/lib/api';
@@ -401,7 +401,12 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
           <div className="reveal reveal-delay-1 grid gap-x-10 gap-y-6 sm:grid-cols-2">
             {skills.hard.slice(0, 6).map((skill) => (
-              <SkillBar key={skill.id} skill={skill} compact />
+              <SkillItem
+                key={skill.id}
+                skill={skill}
+                levelLabel={dictionary.skills.levels[skill.level]}
+                compact
+              />
             ))}
           </div>
         </div>

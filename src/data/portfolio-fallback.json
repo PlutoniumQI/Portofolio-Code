@@ -1,7 +1,7 @@
 {
     "id": {
         "locale": "id",
-        "generated_at": "2026-11-17T06:45:31+00:00",
+        "generated_at": "2026-11-17T07:55:31+00:00",
         "profile": {
             "id": "1",
             "full_name": "Muhammad Resky Ramadhan",
@@ -31,7 +31,7 @@
                     "id": "1",
                     "name": "UI/UX Design",
                     "category": "hard",
-                    "percentage": 85,
+                    "level": "advanced",
                     "description": "Riset, wireframe, prototyping, dan pengujian kegunaan.",
                     "icon": "palette"
                 },
@@ -39,7 +39,7 @@
                     "id": "2",
                     "name": "Figma",
                     "category": "hard",
-                    "percentage": 90,
+                    "level": "expert",
                     "description": "Komponen, auto layout, design system, dan kolaborasi.",
                     "icon": "figma"
                 },
@@ -47,7 +47,7 @@
                     "id": "3",
                     "name": "HTML & CSS",
                     "category": "hard",
-                    "percentage": 85,
+                    "level": "advanced",
                     "description": "Markup semantik, layout responsif, dan aksesibilitas.",
                     "icon": "code"
                 },
@@ -55,7 +55,7 @@
                     "id": "4",
                     "name": "JavaScript",
                     "category": "hard",
-                    "percentage": 78,
+                    "level": "intermediate",
                     "description": "DOM, fetch API, dan logika antarmuka modern.",
                     "icon": "javascript"
                 },
@@ -63,7 +63,7 @@
                     "id": "5",
                     "name": "React & Next.js",
                     "category": "hard",
-                    "percentage": 75,
+                    "level": "intermediate",
                     "description": "Komponen, routing, data fetching, dan optimasi halaman.",
                     "icon": "react"
                 },
@@ -71,7 +71,7 @@
                     "id": "6",
                     "name": "Tailwind CSS",
                     "category": "hard",
-                    "percentage": 85,
+                    "level": "advanced",
                     "description": "Utility-first styling dan design token di CSS.",
                     "icon": "tailwind"
                 },
@@ -79,7 +79,7 @@
                     "id": "7",
                     "name": "Laravel",
                     "category": "hard",
-                    "percentage": 72,
+                    "level": "intermediate",
                     "description": "Routing, Eloquent, validasi, dan API.",
                     "icon": "laravel"
                 },
@@ -87,7 +87,7 @@
                     "id": "8",
                     "name": "PHP",
                     "category": "hard",
-                    "percentage": 70,
+                    "level": "intermediate",
                     "description": "Dasar pemrograman server-side dan struktur aplikasi.",
                     "icon": "php"
                 }
@@ -97,7 +97,7 @@
                     "id": "9",
                     "name": "Communication",
                     "category": "soft",
-                    "percentage": 85,
+                    "level": "advanced",
                     "description": "Menyampaikan ide dengan jelas kepada tim dan pengguna.",
                     "icon": "chat"
                 },
@@ -105,7 +105,7 @@
                     "id": "10",
                     "name": "Teamwork",
                     "category": "soft",
-                    "percentage": 90,
+                    "level": "expert",
                     "description": "Berkolaborasi lintas peran dan memberi umpan balik.",
                     "icon": "users"
                 },
@@ -113,7 +113,7 @@
                     "id": "11",
                     "name": "Problem Solving",
                     "category": "soft",
-                    "percentage": 82,
+                    "level": "advanced",
                     "description": "Memecah masalah kompleks menjadi langkah kecil.",
                     "icon": "sparkles"
                 },
@@ -121,7 +121,7 @@
                     "id": "12",
                     "name": "Time Management",
                     "category": "soft",
-                    "percentage": 78,
+                    "level": "intermediate",
                     "description": "Mengatur prioritas antara sekolah dan proyek.",
                     "icon": "clock"
                 },
@@ -129,7 +129,7 @@
                     "id": "13",
                     "name": "Adaptability",
                     "category": "soft",
-                    "percentage": 82,
+                    "level": "advanced",
                     "description": "Cepat belajar alat dan kebutuhan baru.",
                     "icon": "refresh"
                 }
@@ -433,7 +433,7 @@
                     "Tailwind CSS",
                     "Accessibility"
                 ],
-                "published_at": "2026-11-13T06:45:30+00:00",
+                "published_at": "2026-11-13T07:55:30+00:00",
                 "is_featured": false,
                 "reading_time": 1,
                 "body": "<p>Handoff bukan sekadar menyalin warna dan ukuran. Ada keputusan tentang spacing, state, dan perilaku di layar kecil yang perlu diselesaikan bersama.</p><h3>Tiga kebiasaan yang membantu</h3><ul><li>Menamai komponen dengan bahasa yang sama di Figma dan kode.</li><li>Menentukan breakpoint sebelum menulis CSS.</li><li>Menguji dengan keyboard dan pembaca layar sejak awal.</li></ul><p>Semakin cepat perbedaan antara desain dan implementasi ditemukan, semakin murah perbaikannya.</p>"
@@ -450,7 +450,7 @@
                     "Figma",
                     "Case study"
                 ],
-                "published_at": "2026-11-05T06:45:30+00:00",
+                "published_at": "2026-11-05T07:55:30+00:00",
                 "is_featured": true,
                 "reading_time": 1,
                 "body": "<p>Desain yang baik sering terasa sederhana karena banyak keputusan rumit disembunyikan dengan rapi. Saat mengerjakan Modulia, saya belajar bahwa mengurangi pilihan tidak selalu berarti mengurangi kemampuan.</p><h3>Mulai dari pertanyaan</h3><p>Saya mewawancarai guru dan siswa untuk memahami langkah mana yang paling sering membuat mereka ragu. Dari sana, saya membuat satu alur utama dan memindahkan opsi lanjutan ke tempat yang tidak mengganggu.</p><h3>Uji, lalu perbaiki</h3><p>Prototipe diuji dengan tugas nyata. Perubahan kecil pada label dan urutan field ternyata lebih berdampak daripada menambah fitur baru.</p>"
@@ -459,7 +459,7 @@
     },
     "en": {
         "locale": "en",
-        "generated_at": "2026-11-17T06:45:31+00:00",
+        "generated_at": "2026-11-17T07:55:31+00:00",
         "profile": {
             "id": "1",
             "full_name": "Muhammad Resky Ramadhan",
@@ -489,7 +489,7 @@
                     "id": "1",
                     "name": "UI/UX Design",
                     "category": "hard",
-                    "percentage": 85,
+                    "level": "advanced",
                     "description": "Research, wireframes, prototyping, and usability testing.",
                     "icon": "palette"
                 },
@@ -497,7 +497,7 @@
                     "id": "2",
                     "name": "Figma",
                     "category": "hard",
-                    "percentage": 90,
+                    "level": "expert",
                     "description": "Components, auto layout, design systems, and collaboration.",
                     "icon": "figma"
                 },
@@ -505,7 +505,7 @@
                     "id": "3",
                     "name": "HTML & CSS",
                     "category": "hard",
-                    "percentage": 85,
+                    "level": "advanced",
                     "description": "Semantic markup, responsive layout, and accessibility.",
                     "icon": "code"
                 },
@@ -513,7 +513,7 @@
                     "id": "4",
                     "name": "JavaScript",
                     "category": "hard",
-                    "percentage": 78,
+                    "level": "intermediate",
                     "description": "DOM, fetch API, and modern interface logic.",
                     "icon": "javascript"
                 },
@@ -521,7 +521,7 @@
                     "id": "5",
                     "name": "React & Next.js",
                     "category": "hard",
-                    "percentage": 75,
+                    "level": "intermediate",
                     "description": "Components, routing, data fetching, and page optimisation.",
                     "icon": "react"
                 },
@@ -529,7 +529,7 @@
                     "id": "6",
                     "name": "Tailwind CSS",
                     "category": "hard",
-                    "percentage": 85,
+                    "level": "advanced",
                     "description": "Utility-first styling and design tokens in CSS.",
                     "icon": "tailwind"
                 },
@@ -537,7 +537,7 @@
                     "id": "7",
                     "name": "Laravel",
                     "category": "hard",
-                    "percentage": 72,
+                    "level": "intermediate",
                     "description": "Routing, Eloquent, validation, and APIs.",
                     "icon": "laravel"
                 },
@@ -545,7 +545,7 @@
                     "id": "8",
                     "name": "PHP",
                     "category": "hard",
-                    "percentage": 70,
+                    "level": "intermediate",
                     "description": "Server-side programming fundamentals and application structure.",
                     "icon": "php"
                 }
@@ -555,7 +555,7 @@
                     "id": "9",
                     "name": "Communication",
                     "category": "soft",
-                    "percentage": 85,
+                    "level": "advanced",
                     "description": "Explaining ideas clearly to teams and users.",
                     "icon": "chat"
                 },
@@ -563,7 +563,7 @@
                     "id": "10",
                     "name": "Teamwork",
                     "category": "soft",
-                    "percentage": 90,
+                    "level": "expert",
                     "description": "Collaborating across roles and giving useful feedback.",
                     "icon": "users"
                 },
@@ -571,7 +571,7 @@
                     "id": "11",
                     "name": "Problem Solving",
                     "category": "soft",
-                    "percentage": 82,
+                    "level": "advanced",
                     "description": "Breaking complex problems into small, testable steps.",
                     "icon": "sparkles"
                 },
@@ -579,7 +579,7 @@
                     "id": "12",
                     "name": "Time Management",
                     "category": "soft",
-                    "percentage": 78,
+                    "level": "intermediate",
                     "description": "Balancing school work, projects, and deadlines.",
                     "icon": "clock"
                 },
@@ -587,7 +587,7 @@
                     "id": "13",
                     "name": "Adaptability",
                     "category": "soft",
-                    "percentage": 82,
+                    "level": "advanced",
                     "description": "Learning new tools and requirements quickly.",
                     "icon": "refresh"
                 }
@@ -891,7 +891,7 @@
                     "Tailwind CSS",
                     "Accessibility"
                 ],
-                "published_at": "2026-11-13T06:45:30+00:00",
+                "published_at": "2026-11-13T07:55:30+00:00",
                 "is_featured": false,
                 "reading_time": 1,
                 "body": "<p>Handoff is not just copying colours and measurements. There are decisions about spacing, states, and small-screen behaviour that need to be resolved together.</p><h3>Three habits that help</h3><ul><li>Naming components with the same language in Figma and code.</li><li>Choosing breakpoints before writing CSS.</li><li>Testing with a keyboard and screen reader from the start.</li></ul><p>The sooner gaps between design and implementation are found, the cheaper they are to fix.</p>"
@@ -908,7 +908,7 @@
                     "Figma",
                     "Case study"
                 ],
-                "published_at": "2026-11-05T06:45:30+00:00",
+                "published_at": "2026-11-05T07:55:30+00:00",
                 "is_featured": true,
                 "reading_time": 1,
                 "body": "<p>Good design often feels simple because many hard decisions are hidden neatly. While working on Modulia, I learned that reducing choices does not always mean reducing capability.</p><h3>Start with a question</h3><p>I interviewed teachers and students to understand which steps made them hesitate most. From there, I created one primary flow and moved advanced options somewhere they would not interrupt it.</p><h3>Test, then refine</h3><p>I tested the prototype with real tasks. Small changes to labels and field order had more impact than adding new features.</p>"

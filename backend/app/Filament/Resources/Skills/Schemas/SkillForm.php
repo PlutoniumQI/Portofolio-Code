@@ -32,13 +32,11 @@ class SkillForm
                                     ->default(Skill::CATEGORY_HARD)
                                     ->required()
                                     ->native(false),
-                                TextInput::make('percentage')
+                                Select::make('level')
+                                    ->options(Skill::levels())
+                                    ->default(Skill::LEVEL_INTERMEDIATE)
                                     ->required()
-                                    ->integer()
-                                    ->minValue(0)
-                                    ->maxValue(100)
-                                    ->suffix('%')
-                                    ->default(80),
+                                    ->native(false),
                                 TextInput::make('icon')
                                     ->maxLength(255)
                                     ->placeholder('e.g. palette, code, figma')

@@ -137,7 +137,7 @@ class PortfolioService
             'id' => (string) $skill->id,
             'name' => $skill->name,
             'category' => $skill->category,
-            'percentage' => $skill->percentage,
+            'level' => $skill->level,
             'description' => $skill->translated('description', $locale),
             'icon' => $skill->icon,
         ];

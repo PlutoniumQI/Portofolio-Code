@@ -5,7 +5,7 @@ import { Avatar } from '@/components/ui/Avatar';
 import { Icon } from '@/components/ui/Icons';
 import { Prose } from '@/components/ui/Prose';
 import { PageHero, Section, SectionHeading } from '@/components/ui/Section';
-import { SkillBar } from '@/components/ui/SkillBar';
+import { SkillItem } from '@/components/ui/SkillItem';
 import { SocialLinks } from '@/components/ui/SocialLinks';
 import { getPortfolio } from '@/lib/api';
 import { getDictionary } from '@/lib/dictionaries';
@@ -233,7 +233,12 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             />
             <div className="mt-7 grid gap-x-8 gap-y-5 sm:grid-cols-2">
               {skills.soft.map((skill) => (
-                <SkillBar key={skill.id} skill={skill} compact />
+                <SkillItem
+                  key={skill.id}
+                  skill={skill}
+                  levelLabel={dictionary.skills.levels[skill.level]}
+                  compact
+                />
               ))}
             </div>
           </div>

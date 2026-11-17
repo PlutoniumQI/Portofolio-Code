@@ -27,9 +27,16 @@ class SkillsTable
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => Skill::categories()[$state] ?? $state)
                     ->color(fn (string $state): string => $state === Skill::CATEGORY_HARD ? 'success' : 'info'),
-                TextColumn::make('percentage')
-                    ->numeric()
-                    ->suffix('%')
+                TextColumn::make('level')
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => Skill::levels()[$state] ?? $state)
+                    ->color(fn (string $state): string => match ($state) {
+                        Skill::LEVEL_BEGINNER => 'gray',
+                        Skill::LEVEL_INTERMEDIATE => 'info',
+                        Skill::LEVEL_ADVANCED => 'success',
+                        Skill::LEVEL_EXPERT => 'warning',
+                        default => 'gray',
+                    })
                     ->sortable(),
                 TextColumn::make('sort_order')
                     ->label('#')

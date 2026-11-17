@@ -432,31 +432,6 @@ body::after {
   opacity: 0.6;
 }
 
-/* ─── SKILL BAR ─────────────────────────────────────────────────────────── */
-.skill-bar {
-  height: 5px;
-  border-radius: 999px;
-  background: var(--line);
-  overflow: hidden;
-}
-
-.skill-bar > span {
-  display: block;
-  height: 100%;
-  border-radius: inherit;
-  background: linear-gradient(90deg, var(--accent-strong), var(--accent));
-  transform-origin: left;
-  transition: width 1.1s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.js .reveal .skill-bar > span {
-  width: 0 !important;
-}
-
-.js .reveal.visible .skill-bar > span {
-  width: var(--value) !important;
-}
-
 /* ─── HOVER FADE (Brittany Chiang style) ────────────────────────────────── */
 .hover-fade-group:hover .hover-fade-item {
   opacity: 0.35;
@@ -813,10 +788,6 @@ body::after {
   .js .reveal {
     opacity: 1;
     transform: none;
-  }
-
-  .js .reveal .skill-bar > span {
-    width: var(--value) !important;
   }
 }
 

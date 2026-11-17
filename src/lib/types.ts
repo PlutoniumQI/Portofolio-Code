@@ -28,11 +28,13 @@ export interface Profile {
   };
 }
 
+export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'expert';
+
 export interface Skill {
   id: string;
   name: string;
   category: 'hard' | 'soft';
-  percentage: number;
+  level: SkillLevel;
   description: string | null;
   icon: string | null;
 }

@@ -1,6 +1,5 @@
-import type { CSSProperties } from 'react';
 import type { IconName } from '@/components/ui/Icons';
-import type { Skill } from '@/lib/types';
+import type { Skill, SkillLevel } from '@/lib/types';
 
 export function skillIcon(name: string): IconName {
   const value = name.toLowerCase();
@@ -15,29 +14,35 @@ export function skillIcon(name: string): IconName {
   return 'layers';
 }
 
-export function SkillBar({ skill, compact = false }: { skill: Skill; compact?: boolean }) {
+const levelStyles: Record<SkillLevel, string> = {
+  beginner: 'border-line text-faint',
+  intermediate: 'border-accent-line text-accent',
+  advanced: 'border-accent-line bg-accent-soft text-accent',
+  expert: 'border-accent bg-accent text-on-accent',
+};
+
+export function skillLevelClass(level: SkillLevel): string {
+  return levelStyles[level] ?? levelStyles.intermediate;
+}
+
+export function SkillItem({
+  skill,
+  levelLabel,
+  compact = false,
+}: {
+  skill: Skill;
+  levelLabel: string;
+  compact?: boolean;
+}) {
   return (
     <div>
-      <div className="flex items-baseline justify-between gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <span className="text-sm font-medium text-ink">{skill.name}</span>
-        <span className="font-mono text-[10px] text-accent">{skill.percentage}%</span>
-      </div>
-      <div
-        className="skill-bar mt-2"
-        role="progressbar"
-        aria-valuenow={skill.percentage}
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-label={skill.name}
-      >
         <span
-          style={
-            {
-              '--value': `${skill.percentage}%`,
-              width: `${skill.percentage}%`,
-            } as CSSProperties
-          }
-        />
+          className={`rounded-full border px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.12em] ${skillLevelClass(skill.level)}`}
+        >
+          {levelLabel}
+        </span>
       </div>
       {!compact && skill.description && (
         <p className="mt-2 text-xs leading-relaxed text-faint">{skill.description}</p>

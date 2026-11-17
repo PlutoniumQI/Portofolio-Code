@@ -1,9 +1,9 @@
 # Backend — Filament admin + API
 
 Laravel 13 + Filament 5. Runs locally with SQLite and the public disk; production runs on
-**Apply.Build Free** (Docker) at `api.<domain>` with **Neon Postgres**, and media is pasted in as
-public URLs. Read `../AGENTS.md` first and
-[`../docs/deploy-apply-build-neon.md`](../docs/deploy-apply-build-neon.md) for the deployment runbook.
+**Vercel Containers** at `api.<domain>` with **Neon Postgres**, and media is pasted in as public
+URLs. Read `../AGENTS.md` first and
+[`../docs/deploy-vercel-neon.md`](../docs/deploy-vercel-neon.md) for the deployment runbook.
 
 ## Local development
 
@@ -30,19 +30,21 @@ public URLs. Read `../AGENTS.md` first and
 
 ## Production
 
-- `../Dockerfile` (repository root) is the Apply.Build build file. It uses
-  `serversideup/php:8.4-fpm-nginx`, installs `intl` + `pdo_pgsql`, and copies this directory into the
-  image.
-- Environment reference: `.env.production.example`. Real values (APP_KEY, DB_URL, ADMIN_PASSWORD)
-  live only in Apply.Build. Never commit `.env`.
-- Startup scripts in `docker/entrypoint.d/` cache config/views, publish Filament assets, run
-  migrations when `RUN_MIGRATIONS=true`, and seed when `SEED_DATABASE=true`. Seeders must be
-  idempotent because restarts re-run them while the flag is on.
-- Sessions and cache use Postgres; the queue is `sync`; logs go to stderr.
+- `Dockerfile.vercel` is the Vercel Container build file. It uses FrankenPHP 8.4, installs
+  `intl` + `zip` + `pdo_pgsql`, publishes Filament assets, and precompiles Blade views at build
+  time. `Caddyfile` serves `public/` on Vercel's `$PORT`, and `vercel.json` pins the framework to
+  `container` so the Vite scaffolding in this directory is never detected instead.
+- Environment reference: `.env.production.example`. Real values (APP_KEY, DB_URL, revalidation
+  secret) live only in Vercel. Never commit `.env`.
+- Migrations and seeding are a one-off command from a workstation
+  (`php artisan migrate --seed --force`). Never run them from the container: Vercel can start several
+  instances concurrently. Seeders must stay idempotent.
+- Sessions and cache use Postgres; the queue is `sync`; logs go to stderr. The container filesystem
+  is ephemeral, so nothing may depend on local files.
 - CORS is defined in `config/cors.php` and accepts only `FRONTEND_ALLOWED_ORIGINS`. Do not use `*`
   in production.
-- The admin user is seeded from `ADMIN_EMAIL` / `ADMIN_PASSWORD`. Changing those env vars later does
-  not update an existing password; use the Filament profile page.
+- The admin user is seeded once from `ADMIN_EMAIL` / `ADMIN_PASSWORD`. Changing those env vars later
+  does not update an existing password; use the Filament profile page.
 - The admin is URL-only: paste public image/PDF URLs into the cover, gallery, certificate, avatar,
   blog cover, and CV fields. There is no upload disk and no GitHub token in production.
 - The API lives in `routes/api.php`:
@@ -62,9 +64,6 @@ public URLs. Read `../AGENTS.md` first and
 - **Settings → Publish changes** calls `App\Services\FrontendRevalidator`, which posts to
   `FRONTEND_REVALIDATE_URL` (the Vercel `/api/revalidate` route) with
   `FRONTEND_REVALIDATE_SECRET`. Leave both empty locally; ISR refreshes on its own schedule.
-  The page also has a collapsed legacy section that calls `portfolio:export`.
-- Apply.Build routes to the port configured in the app settings; the image listens on `8080`
-  (`NGINX_HTTP_PORT=8080`, `SSL_MODE=off`), and the health check path is `/up`.
 
-Do not add a Vercel build for this app, a PHP runtime on Vercel, or a queue worker on the free
-512 MiB instance without checking the limits.
+Do not add startup scripts, queue workers, or persistent-disk assumptions. Container Functions run
+in `sin1`, scale to zero after about five minutes idle, and cap request bodies at 4.5 MB.

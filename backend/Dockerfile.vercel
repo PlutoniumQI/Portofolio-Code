@@ -1,0 +1,84 @@
+# Production image for the Laravel + Filament backend on Vercel.
+#
+# Vercel builds this file as an OCI image, runs it as a request-driven
+# Function, and routes traffic through Caddy to public/index.php. The container
+# filesystem is ephemeral: content, sessions, and cache live in Neon Postgres,
+# and media is stored as public URLs.
+#
+# The `.vercel` suffix makes Vercel prefer the Container preset over the Vite
+# scaffolding in this directory.
+
+FROM dunglas/frankenphp:1-php8.4-bookworm AS base
+
+RUN cp "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" \
+    && install-php-extensions intl zip pdo_pgsql \
+    && printf '%s\n' \
+        'memory_limit = 256M' \
+        'expose_php = Off' \
+        'opcache.enable = 1' \
+        'opcache.validate_timestamps = 0' \
+        'realpath_cache_size = 4096K' \
+        'realpath_cache_ttl = 600' \
+        > "$PHP_INI_DIR/conf.d/99-portfolio.ini"
+
+WORKDIR /app
+
+# The build runs as root inside the image. Composer refuses to run without this
+# in some non-interactive contexts.
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
+# Install PHP dependencies before copying the application so this layer is
+# cached between deployments. Scripts run later, after the app is present.
+FROM base AS dependencies
+
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+COPY composer.json composer.lock ./
+RUN composer install \
+    --no-dev \
+    --no-interaction \
+    --no-progress \
+    --no-scripts \
+    --optimize-autoloader \
+    --prefer-dist
+
+COPY . .
+RUN mkdir -p \
+        bootstrap/cache \
+        storage/app/public \
+        storage/framework/cache/data \
+        storage/framework/sessions \
+        storage/framework/testing \
+        storage/framework/views \
+        storage/logs \
+    && composer dump-autoload --optimize --no-dev --no-scripts
+
+# Final image. Build-time caches must not depend on runtime environment
+# variables, so config is intentionally left uncached. Filament assets and
+# compiled Blade views are immutable, so they are safe to bake in.
+FROM base AS runtime
+
+COPY --from=dependencies --chown=www-data:www-data /app /app
+COPY --chown=www-data:www-data Caddyfile /etc/frankenphp/Caddyfile
+
+RUN APP_KEY=base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA= \
+        php artisan package:discover --ansi \
+    && APP_KEY=base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA= \
+        php artisan filament:assets --ansi \
+    && APP_KEY=base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA= \
+        php artisan view:cache --ansi \
+    && chown -R www-data:www-data storage bootstrap/cache public
+
+# Vercel terminates TLS and injects PORT (default 80). Caddy reads it.
+ENV PORT=80 \
+    APP_ENV=production \
+    APP_DEBUG=false \
+    LOG_CHANNEL=stderr
+
+RUN setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/frankenphp \
+    && chown -R www-data:www-data /config/caddy /data/caddy
+
+USER www-data
+
+EXPOSE 80
+
+CMD ["frankenphp", "run", "--config", "/etc/frankenphp/Caddyfile"]

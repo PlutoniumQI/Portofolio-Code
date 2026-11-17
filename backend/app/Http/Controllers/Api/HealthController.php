@@ -8,10 +8,11 @@ use Illuminate\Http\JsonResponse;
 class HealthController extends Controller
 {
     /**
-     * Lightweight liveness endpoint for the frontend and uptime monitors.
+     * Lightweight liveness endpoint for the frontend, uptime monitors, and
+     * post-deploy smoke tests.
      *
-     * It intentionally does not touch the database so it stays fast.
-     * Apply.Build checks /up separately.
+     * It intentionally does not touch the database so it stays fast even while
+     * Neon is waking up. Laravel exposes /up separately.
      */
     public function __invoke(): JsonResponse
     {

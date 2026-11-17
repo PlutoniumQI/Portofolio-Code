@@ -1,39 +1,31 @@
-.git
-.github
-.gitignore
-.vscode
-.idea
+# Build context is backend/. Vercel builds the image from Dockerfile.vercel;
+# keep the context small and free of secrets.
 
-# Never ship environment files or secrets in the image.
+.git
+.gitignore
 .env
 .env.*
 
-vendor
 node_modules
-public/storage
-public/hot
-public/build
+vendor
+tests
+phpunit.xml
+.phpunit.cache
+.phpunit.result.cache
 
-# Do not copy local caches; the image builds its own.
-bootstrap/cache/*
-!bootstrap/cache/.gitignore
+database/*.sqlite
 storage/logs/*
 storage/framework/cache/*
 storage/framework/sessions/*
 storage/framework/views/*
-storage/framework/testing/*
-storage/app/public/*
-storage/pail
+storage/app/*.sqlite
 
-database/database.sqlite
-database/*.sqlite
+public/storage
+public/js/filament
+public/css/filament
+public/fonts/filament
+public/fonts-manifest.dev.json
+public/hot
 
-tests
-phpunit.xml
-.phpunit.result.cache
-.phpunit.cache
-
-AGENTS.md
-CLAUDE.md
-README.md
-docs
+*.md
+.DS_Store

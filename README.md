@@ -1,18 +1,19 @@
 # re:SKY — Portfolio
 
 Bilingual personal portfolio for Muhammad Resky Ramadhan. A Next.js 16 frontend, a Laravel 13 +
-Filament 5 admin and API, deployed for free on Vercel + Apply.Build + Neon.
+Filament 5 admin and API, deployed for free on Vercel + Vercel Containers + Neon.
 
-> **Status:** the API-backed bilingual frontend is built; lint, type-check, and the production build
-> pass. What remains is deployment — Neon, Apply.Build, Vercel, and DNS. The runbook is in
-> [`docs/deploy-apply-build-neon.md`](docs/deploy-apply-build-neon.md).
+> **Status:** the API-backed bilingual frontend and the Vercel container backend are built; lint,
+> type-check, tests, and the production build pass. What remains is deployment — Neon, the Vercel
+> backend project, domains, and environment variables. The runbook is in
+> [`docs/deploy-vercel-neon.md`](docs/deploy-vercel-neon.md).
 
 ## Stack
 
 | Layer | Technology | Host |
 |---|---|---|
 | Frontend | Next.js 16 (App Router), Tailwind CSS v4 | Vercel Hobby |
-| Admin + API | Laravel 13, Filament 5 | Apply.Build Free (Docker) |
+| Admin + API | Laravel 13, Filament 5 | Vercel Containers (Hobby) |
 | Database | PostgreSQL | Neon Free |
 | Images / PDFs | Public URLs | GitHub raw URLs |
 
@@ -59,9 +60,11 @@ src/components/              site shell, UI primitives, explorers, forms
 src/lib/                     API client, dictionaries, types, i18n helpers
 src/data/portfolio-fallback.json   committed bilingual snapshot for builds/offline
 backend/                     Laravel 13 + Filament 5 admin and API
-Dockerfile                   Apply.Build image (builds from the repo root)
-.dockerignore                keeps the Docker build context small
-docs/deploy-apply-build-neon.md   deployment runbook
+backend/Dockerfile.vercel    Vercel container image (FrankenPHP + Caddy)
+backend/Caddyfile            serves backend/public on Vercel's $PORT
+backend/vercel.json          pins the Vercel framework to "container"
+backend/.dockerignore        keeps the container build context small
+docs/deploy-vercel-neon.md   deployment runbook
 ```
 
 ## Requirements
@@ -155,7 +158,7 @@ into the cover, gallery, certificate, avatar, blog cover, or CV field.
   `github.com/.../blob/...` page, and not a private repo.
 - The gallery accepts a list of URLs; each entry is stored in the `gallery` JSON column.
 - The PHP build has no GD/Imagick conversion, so compress images before committing them.
-- Apply.Build limits request bodies to 1 MiB; only URL strings are submitted, so this is not a
+- Vercel Functions cap request bodies at 4.5 MB; only URL strings are submitted, so this is not a
   practical limit.
 - Nothing is stored on the container, so redeploys do not affect media.
 
@@ -187,18 +190,19 @@ does not need it, but keep it correct for the admin and any direct browser calls
 
 ## Deployment
 
-Both apps deploy from this repository: Vercel builds Next.js at the root, Apply.Build builds the
-root `Dockerfile` (which copies `backend/`). The full zero-budget runbook is
-[`docs/deploy-apply-build-neon.md`](docs/deploy-apply-build-neon.md); it covers:
+Both apps deploy from this repository: Vercel builds Next.js at the root, and a second Vercel
+project builds `backend/Dockerfile.vercel` with Root Directory `backend`. The full zero-budget
+runbook is [`docs/deploy-vercel-neon.md`](docs/deploy-vercel-neon.md); it covers:
 
 1. Preparing the public media repository and raw URLs.
-2. Creating the Neon Postgres project.
-3. Creating the Apply.Build app (Dockerfile, port 8080, health `/up`).
-4. Seeding the admin user and content.
-5. Setting Vercel env vars and adding the custom domains.
+2. Creating the Neon Postgres project in Singapore.
+3. Creating the Vercel backend project (Container preset, region `sin1`).
+4. Migrating and seeding the admin user once from a workstation.
+5. Adding `api.<domain>` and setting the frontend env vars.
 6. Security, local fallback, and troubleshooting.
 
-The shared secret must match on both sides: `FRONTEND_REVALIDATE_SECRET` in Apply.Build and Vercel.
+The shared secret must match on both sides: `FRONTEND_REVALIDATE_SECRET` in the Vercel backend
+project and the frontend project.
 
 ## Verification
 
@@ -215,16 +219,17 @@ php artisan test
 vendor\bin\pint --test
 
 # optional, when Docker Desktop is installed
-docker build -t portfolio-api .
+docker build -f backend/Dockerfile.vercel -t portfolio-api backend
 ```
 
 ## Notes
 
 - `backend/.env` and the SQLite database are local and git-ignored. Only `*.example` files are
   committed.
-- Apply.Build keeps the container running; there is no cold start and no keep-alive monitor.
+- Vercel Functions scale to zero after about five minutes idle; the first admin request afterwards
+  can take a few seconds.
 - Neon may suspend idle compute. Use the direct connection string with `DB_SSLMODE=require`.
 - `src/data/portfolio.json` and `php artisan portfolio:export` belong to the retired one-page
   pipeline. The public site no longer reads them; use the admin and the API instead.
-- Do not add a Vercel build for `backend/`, a PHP runtime on Vercel, or a queue worker on the free
-  Apply.Build instance.
+- Do not add startup scripts, queue workers, or persistent-disk assumptions to the backend. The
+  container filesystem is ephemeral; content, sessions, and cache live in Postgres.

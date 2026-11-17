@@ -2,7 +2,7 @@
 
 Laravel 13 + Filament 5. The backend rules, commands, API surface, content model, and production
 notes live in [`AGENTS.md`](AGENTS.md). The deployment runbook is
-[`../docs/deploy-apply-build-neon.md`](../docs/deploy-apply-build-neon.md).
+[`../docs/deploy-vercel-neon.md`](../docs/deploy-vercel-neon.md).
 
 Quick reference:
 

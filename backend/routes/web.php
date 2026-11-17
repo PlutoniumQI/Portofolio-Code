@@ -2,4 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'welcome');
+Route::get('/', fn () => response()->json([
+    'service' => 'portfolio-api',
+    'status' => 'ok',
+    'health' => url('/api/health'),
+    'admin' => url('/admin'),
+]));

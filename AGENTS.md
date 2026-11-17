@@ -13,8 +13,8 @@ This repo contains two apps:
 - **`/` (Next.js 16, App Router)** — the public bilingual site. Deployed to Vercel Hobby at the
   user's domain. Routes are locale-prefixed (`/id/...`, `/en/...`); `/` redirects to `/id`.
 - **`backend/` (Laravel 13 + Filament 5)** — the admin and public API. Local development uses SQLite
-  and the public disk; production runs on **Apply.Build Free (Docker)** at `api.<domain>`, with
-  **Neon Postgres** and media served from public URLs.
+  and the public disk; production runs on **Vercel Containers** at `api.<domain>`, with **Neon
+  Postgres** and media served from public URLs.
 
 Content flow:
 
@@ -30,19 +30,22 @@ the retired one-page app. Do not restore them or the Contentful integration.
 
 ## Infrastructure files
 
-- `Dockerfile` — root build file for Apply.Build; `serversideup/php:8.4-fpm-nginx`, installs `intl`
-  and `pdo_pgsql`, copies the app from `backend/`.
-- `.dockerignore` — keeps the root build context small; excludes the Next.js app and secrets.
-- `backend/docker/entrypoint.d/` — startup scripts: config/view cache, Filament assets, opt-in
-  migrations and seeding.
+- `backend/Dockerfile.vercel` — Vercel Container image (FrankenPHP 8.4); installs `intl`, `zip`, and
+  `pdo_pgsql`, publishes Filament assets, and precompiles Blade views.
+- `backend/Caddyfile` — listens on `$PORT`, serves `backend/public`, and routes requests to
+  `index.php`.
+- `backend/vercel.json` — pins the Vercel framework to `container` so detection never picks the
+  leftover Vite scaffolding in `backend/`.
+- `backend/.dockerignore` — keeps the container build context small; excludes local dependencies, env
+  files, and build artifacts.
 - `backend/config/cors.php` — allows only `FRONTEND_ALLOWED_ORIGINS`.
 - `backend/config/portfolio.php` — export/fallback paths and the frontend revalidation URL and secret.
 - `backend/routes/api.php` — public API: `health`, `portfolio`, `projects`, `posts`, `guestbook`,
   `messages`.
-- `backend/.env.production.example` — production env reference. Real secrets live only in Apply.Build.
+- `backend/.env.production.example` — production env reference. Real secrets live only in Vercel.
 - `.env.example` — frontend env reference: `NEXT_PUBLIC_SITE_URL`, `API_URL`,
   `FRONTEND_REVALIDATE_SECRET`, `PORTFOLIO_REVALIDATE_SECONDS`.
-- `docs/deploy-apply-build-neon.md` — full runbook for Neon, Apply.Build, media URLs, Vercel, DNS,
+- `docs/deploy-vercel-neon.md` — full runbook for Neon, Vercel Containers, media URLs, domains,
   security, and troubleshooting.
 
 ## Source of truth and generated files
@@ -110,33 +113,32 @@ Without that, Filament tables fail with `The "intl" PHP extension is required to
 
 ## Backend rules
 
-- Production is public: Apply.Build Free Docker + Neon Postgres. Keep `APP_DEBUG=false`, `APP_URL` on
-  HTTPS, and secrets only in Apply.Build environment variables.
+- Production is public: Vercel Containers + Neon Postgres. Keep `APP_DEBUG=false`, `APP_URL` on
+  HTTPS, and secrets only in Vercel environment variables.
 - Local development remains SQLite + the `public` disk. Never commit `backend/.env`.
-- Apply.Build environment variables are the source of truth for production. Add new non-secret
-  variables to `backend/.env.production.example` as well; secrets stay in the dashboard only.
+- Vercel environment variables are the source of truth for production. Add new non-secret variables
+  to `backend/.env.production.example` as well; secrets stay in the dashboard only.
 - Sessions and cache use the database in production; the queue is `sync`. Do not add a queue worker
-  on the free 512 MiB instance without checking the limits.
-- Migrations run at container start when `RUN_MIGRATIONS=true`. Seed only with `SEED_DATABASE=true`;
-  seeders must be idempotent because restarts re-run them while the flag is on.
-- Filament assets are git-ignored and published at startup by
-  `backend/docker/entrypoint.d/10-filament-assets.sh`.
-- The admin login is seeded from `ADMIN_EMAIL` / `ADMIN_PASSWORD`. Changing those env vars later does
-  not change an existing password; use the Filament profile page.
+  to the stateless container.
+- Migrations and seeding are a one-off command from a workstation
+  (`php artisan migrate --seed --force`). Never run them at container startup: Vercel can start
+  several instances concurrently. Seeders must stay idempotent.
+- Filament assets are git-ignored and published at image build time by `backend/Dockerfile.vercel`.
+- The admin login is seeded once from `ADMIN_EMAIL` / `ADMIN_PASSWORD`. Changing those env vars later
+  does not change an existing password; use the Filament profile page.
 - CORS is restricted to `FRONTEND_ALLOWED_ORIGINS`. Do not use `*` in production. The Next.js form
   proxy means browsers do not need CORS, but direct calls still do.
 - Project statuses: `draft` (not exposed by the API), `published`, `coming_soon` (exposed with a
   badge). Inactive experiences are not exposed.
 - `sort_order` is the display order and is drag-reorderable in the Filament tables.
 - **Settings → Publish changes** calls the revalidator (`FrontendRevalidator`), which posts to
-  `FRONTEND_REVALIDATE_URL` with `FRONTEND_REVALIDATE_SECRET`. Only the legacy section on that page
-  uses `portfolio:export`.
+  `FRONTEND_REVALIDATE_URL` with `FRONTEND_REVALIDATE_SECRET`.
 - Guestbook entries are hidden from `GET /api/guestbook` until `is_approved` is true. Approve them
   from **Messages & guestbook**.
 - `POST /api/messages` is throttled to 5 requests per minute per IP and has a honeypot. Do not remove
   either.
-- Do not add a Vercel build for `backend/` or PHP hosting on Vercel. The backend runs on Apply.Build as
-  a Docker service.
+- Do not add startup scripts, queue workers, or persistent-disk assumptions to the backend. The
+  container filesystem is ephemeral; content, sessions, and cache live in Postgres.
 
 ## Media rules
 
@@ -146,7 +148,8 @@ Without that, Filament tables fail with `The "intl" PHP extension is required to
   `github.com/.../blob/...` pages. Private repos will not render for visitors.
 - Gallery entries are a list of absolute URLs stored in the `gallery` JSON column; do not reintroduce
   the Flysystem/GitHub uploader.
-- Apply.Build limits request bodies to 1 MiB. Keep media out of form posts; only URLs are submitted.
+- Vercel Functions cap request bodies at 4.5 MB. Keep media out of form posts; only URLs are
+  submitted.
 - This PHP build has no JPEG/WebP GD support and no Imagick. Do not add server-side image conversion.
 - Keep plain `<img>`; no `next/image` remote domains are configured. New remote hosts work without
   config.
@@ -196,7 +199,7 @@ php artisan test
 vendor\bin\pint --test
 
 # optional, when Docker is installed
-docker build -t portfolio-api .
+docker build -f backend/Dockerfile.vercel -t portfolio-api backend
 ```
 
 After a production build, verify with `npm run start`:
@@ -219,13 +222,15 @@ the legacy export for it.
 - Use `127.0.0.1`, not `localhost`, for local backend commands/URLs on Windows.
 - If the local admin shows missing images after a fresh clone, run `php artisan storage:link` in
   `backend/`.
-- The Apply.Build filesystem is ephemeral, but nothing is stored on it: media is external URLs and
-  sessions/cache live in Postgres.
-- Apply.Build keeps the container running; there is no cold start and no keep-alive monitor.
+- The Vercel container filesystem is ephemeral, but nothing is stored on it: media is external URLs
+  and sessions/cache live in Postgres.
+- Vercel Functions scale to zero after about five minutes idle; the first admin request afterwards
+  can take a few seconds.
+- Vercel injects `PORT` (default `80`); `backend/Caddyfile` reads it. Do not override it.
+- Container images are beta. Pin the `frankenphp` base tag and re-test after dependency updates.
 - Neon may suspend compute when idle. Use the **direct** connection string and `DB_SSLMODE=require`.
 - `APP_KEY` must be a valid `base64:` value. Changing it invalidates sessions and encrypted data.
-- Apply.Build routes to the port configured in the app settings; the image listens on `8080`
-  (`NGINX_HTTP_PORT=8080`, `SSL_MODE=off`), and the health check path is `/up`.
+- Delete old Vercel deployments occasionally so Container Registry storage does not grow.
 - Deleting a project or post in Filament does not delete its image from the media repository; remove
   orphaned files manually if needed.
 - Next 16: `revalidateTag(tag, 'max')` takes two arguments. If stale `.next/types` errors appear,

@@ -13,8 +13,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        // Apply.Build terminates TLS at its proxy, so trust the forwarded
-        // headers to generate HTTPS URLs and read the real client IP.
+        // Vercel terminates TLS at its edge, so trust the forwarded headers to
+        // generate HTTPS URLs and read the real client IP.
         $middleware->trustProxies(at: '*');
     })
     ->withExceptions(function (Exceptions $exceptions): void {

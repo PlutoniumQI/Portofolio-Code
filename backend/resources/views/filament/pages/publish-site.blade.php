@@ -25,28 +25,5 @@
                 </x-filament::button>
             </div>
         </x-filament::section>
-
-        <x-filament::section heading="Legacy static export" collapsible collapsed>
-            <div class="space-y-4">
-                <p class="text-sm text-gray-600 dark:text-gray-300">
-                    This writes <code class="font-mono text-xs">src/data/portfolio.json</code> for the old one-page
-                    frontend. It is no longer required once the API-backed pages are deployed.
-                </p>
-
-                <x-filament::button
-                    wire:click="export"
-                    wire:loading.attr="disabled"
-                    wire:target="export"
-                    color="gray"
-                    icon="heroicon-o-arrow-down-tray"
-                >
-                    Export static JSON
-                </x-filament::button>
-
-                @if ($lastOutput)
-                    <pre class="overflow-x-auto whitespace-pre-wrap text-xs text-gray-600 dark:text-gray-300">{{ $lastOutput }}</pre>
-                @endif
-            </div>
-        </x-filament::section>
     </div>
 </x-filament-panels::page>

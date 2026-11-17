@@ -20,9 +20,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Apply.Build serves the app over HTTPS through its proxy. Force
-        // generated URLs (Filament assets, redirects, password links) to use
-        // HTTPS.
+        // Vercel terminates TLS at its edge. Force generated URLs (Filament
+        // assets, redirects, password links) to use HTTPS in production.
         if ($this->app->isProduction()) {
             URL::forceScheme('https');
         }

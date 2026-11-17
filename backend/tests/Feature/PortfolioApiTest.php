@@ -108,4 +108,13 @@ class PortfolioApiTest extends TestCase
             ->assertJsonPath('data.slug', 'designing-for-clarity')
             ->assertJsonStructure(['data' => ['body', 'reading_time']]);
     }
+
+    public function test_the_service_root_returns_json_metadata(): void
+    {
+        $this->getJson('/')
+            ->assertOk()
+            ->assertJsonPath('service', 'portfolio-api')
+            ->assertJsonPath('status', 'ok')
+            ->assertJsonPath('health', url('/api/health'));
+    }
 }

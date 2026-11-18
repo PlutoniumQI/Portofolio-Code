@@ -8,6 +8,26 @@ use Illuminate\Support\Facades\Log;
 class FrontendRevalidator
 {
     /**
+     * Every public page that renders portfolio content. The frontend expands
+     * these into both locales and also refreshes project/blog detail routes.
+     *
+     * @var array<int, string>
+     */
+    public const PATHS = [
+        '/',
+        '/about',
+        '/blog',
+        '/certificates',
+        '/contact',
+        '/cv',
+        '/experience',
+        '/guestbook',
+        '/projects',
+        '/skills',
+        '/testimonials',
+    ];
+
+    /**
      * @return array{ok: bool, message: string}
      */
     public function revalidate(): array
@@ -28,7 +48,7 @@ class FrontendRevalidator
             ])
                 ->acceptJson()
                 ->timeout(15)
-                ->post($url, ['paths' => ['/']]);
+                ->post($url, ['paths' => self::PATHS]);
 
             if ($response->failed()) {
                 return [

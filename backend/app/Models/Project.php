@@ -91,7 +91,18 @@ class Project extends Model
     public function galleryUrls(): array
     {
         return collect($this->gallery ?? [])
-            ->map(function (string $path): ?string {
+            ->map(function (mixed $path): ?string {
+                // Filament's simple repeater stores each row as ['url' => '...'].
+                // Older seeds and the legacy export use plain strings, so accept
+                // both shapes and never let one malformed row break the API.
+                if (is_array($path)) {
+                    $path = $path['url'] ?? null;
+                }
+
+                if (! is_string($path) || blank($path)) {
+                    return null;
+                }
+
                 if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
                     return $path;
                 }

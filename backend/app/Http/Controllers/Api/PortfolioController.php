@@ -13,8 +13,9 @@ class PortfolioController extends Controller
     {
         $locale = $request->query('locale') === 'en' ? 'en' : 'id';
 
-        return response()
-            ->json($portfolio->payload($locale))
-            ->header('Cache-Control', 'public, max-age=60, s-maxage=300');
+        // Next.js owns the public cache (ISR + tag revalidation). Do not add a
+        // shared max-age here: Vercel would serve a stale API payload after the
+        // admin saves, even when the revalidation webhook has run.
+        return response()->json($portfolio->payload($locale));
     }
 }

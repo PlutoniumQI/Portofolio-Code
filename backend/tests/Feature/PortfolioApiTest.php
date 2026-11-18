@@ -102,6 +102,35 @@ class PortfolioApiTest extends TestCase
         $this->getJson('/api/projects/exam-platform')->assertNotFound();
     }
 
+    public function test_the_project_gallery_accepts_filament_repeater_rows(): void
+    {
+        Project::query()->where('slug', 'exam-platform')->update([
+            'gallery' => [
+                ['url' => 'https://example.com/one.jpg'],
+                ['url' => 'https://example.com/two.jpg'],
+            ],
+        ]);
+
+        $this->getJson('/api/projects/exam-platform')
+            ->assertOk()
+            ->assertJsonPath('data.gallery', [
+                'https://example.com/one.jpg',
+                'https://example.com/two.jpg',
+            ]);
+    }
+
+    public function test_the_portfolio_response_is_not_cached_by_a_shared_proxy(): void
+    {
+        $response = $this->getJson('/api/portfolio');
+
+        $response->assertOk();
+
+        $this->assertStringNotContainsString(
+            's-maxage',
+            (string) $response->headers->get('Cache-Control'),
+        );
+    }
+
     public function test_project_search_and_category_filters_are_applied(): void
     {
         $this->getJson('/api/projects?q=bilingual')

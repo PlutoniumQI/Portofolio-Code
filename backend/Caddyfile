@@ -9,6 +9,13 @@
 		X-Frame-Options "SAMEORIGIN"
 	}
 
+	# Filament publishes its assets with a version query string, so they are
+	# safe to cache for a long time. Without this, Vercel treats every asset
+	# request as a Function invocation and a cold container re-serves ~1 MB of
+	# CSS/JS on each admin page load.
+	@filamentAssets path /css/* /js/* /fonts/* /livewire-*
+	header @filamentAssets Cache-Control "public, max-age=31536000, immutable"
+
 	php_server {
 		try_files {path} index.php
 	}

@@ -127,12 +127,12 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
             </div>
 
             <div className="rounded-2xl border border-line bg-elevated/50 p-5">
-              <p className="text-sm text-ink-soft">{dictionary.contact.guestbookCta}</p>
+              <p className="text-sm text-ink-soft">{dictionary.contact.testimonialCta}</p>
               <Link
-                href={localePath(locale, '/guestbook')}
+                href={`${localePath(locale, '/testimonials')}#write`}
                 className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-accent transition-opacity hover:opacity-75"
               >
-                {dictionary.contact.guestbookLink}
+                {dictionary.contact.testimonialLink}
                 <Icon name="arrow-right" size={13} />
               </Link>
             </div>

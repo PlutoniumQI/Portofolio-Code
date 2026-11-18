@@ -4,7 +4,7 @@ This is the zero-budget production runbook for the portfolio. It deploys:
 
 ```text
 www.resky.web.id       Vercel Hobby (Next.js frontend)
-api.resky.web.id       Vercel Containers (Laravel 13 + Filament 5)
+api.resky.web.id       Vercel Containers (Laravel 13, Blade admin)
 Postgres               Neon Free
 images + CV            public URLs (for example a GitHub repository)
 ```
@@ -131,9 +131,10 @@ git status --short
    from `backend/Dockerfile.vercel`.
 6. Deploy. The first container build takes about 5–10 minutes.
 
-The build installs production Composer dependencies, publishes Filament assets
-into `public/`, and precompiles Blade views. It intentionally does **not** run
-`config:cache`, because environment variables are injected at runtime.
+The build installs production Composer dependencies and precompiles Blade
+views; the admin CSS/JS is committed under `backend/public/`. It intentionally
+does **not** run `config:cache`, because environment variables are injected at
+runtime.
 
 ### Environment variables
 
@@ -194,8 +195,9 @@ https://<project>.vercel.app/api/health  -> {"status":"ok", ...}
 https://<project>.vercel.app/admin/login -> login page
 ```
 
-If `/admin/login` renders without CSS, the Filament asset publish step failed;
-check the build logs.
+If `/admin/login` renders without CSS, the build did not copy
+`backend/public/css` and `backend/public/vendor`; check `.dockerignore` and the
+build logs.
 
 ## 6. Run migrations and seed once
 
@@ -225,7 +227,7 @@ content. **Run it once.** Running it again overwrites edits made in the admin.
 
 After seeding, close the terminal or clear the variables. `ADMIN_PASSWORD` is
 only used when the user is first created; changing it later does not change an
-existing password. Use the Filament profile page for that.
+existing password. Use the **Account** page (`/admin/profile`) for that.
 
 ## 7. Add the API custom domain
 
@@ -278,7 +280,7 @@ The backend still runs locally with SQLite and the public disk. This is the
 fallback if Vercel is unavailable during the UKK demo.
 
 ```powershell
-# Terminal 1 — Laravel + Filament
+# Terminal 1 — Laravel admin + API
 npm run dev:backend
 
 # Terminal 2 — Next.js
@@ -306,8 +308,8 @@ it in Vercel.
 
 - `APP_DEBUG=false` in production.
 - `APP_KEY` is a real random key; never commit it.
-- Admin password is unique and 20+ characters. Filament throttles failed
-  logins (5 attempts), but a strong password is still required.
+- Admin password is unique and 20+ characters. The login route throttles failed
+  attempts, but a strong password is still required.
 - HTTPS only. `SESSION_SECURE_COOKIE=true` is set in the environment.
 - `FRONTEND_ALLOWED_ORIGINS` lists exact production origins; do not use `*`.
 - Never commit `backend/.env`, `.env.local`, or any filled-in production file.
@@ -326,8 +328,8 @@ it in Vercel.
 | Build tries to run Vite or `npm run build` | Vercel detected `vite.config.js` | Keep `backend/Dockerfile.vercel`; the `.vercel` suffix forces the Container preset |
 | `502` on every route | Caddy is not listening on Vercel's `PORT` | Keep `:{$PORT:80}` in `Caddyfile`; do not override `PORT` |
 | `No application encryption key has been specified` | `APP_KEY` missing or malformed | Set the full `base64:...` value and redeploy |
-| Filament tables error: `intl` extension required | The image build skipped `intl` | Check `install-php-extensions intl zip pdo_pgsql` in `Dockerfile.vercel` |
-| Filament CSS/JS 404 | `filament:assets` failed during the image build | Check build logs; the assets must be in `public/` |
+| Admin page errors: `intl` extension required | The image build skipped `intl` | Check `install-php-extensions intl zip pdo_pgsql` in `Dockerfile.vercel` |
+| Admin CSS/JS 404 | `backend/public/css` or `backend/public/vendor` missing from the image | Check `.dockerignore`; both directories are committed |
 | `SQLSTATE[08006]` / connection timeout | Neon suspended, wrong host, or missing TLS | Use the direct Neon URL, `sslmode=require`, wake the project in Neon |
 | `password authentication failed` | Password not URL-encoded | Percent-encode `@`, `:`, `/`, `?`, `#` in `DB_URL` |
 | `419 Page Expired` on admin login | Cookie/host mismatch | Clear cookies, set `APP_URL` to the exact HTTPS origin, keep `SESSION_SECURE_COOKIE=true` |
@@ -351,8 +353,8 @@ Everything is edited in the production admin at
 2. Paste image URLs into the form. Use `raw.githubusercontent.com` links; the
    cover, gallery, certificate, avatar, blog cover, and CV fields all accept a
    public URL.
-3. Approve guestbook entries in **Messages & guestbook**.
-4. Open **Settings → Publish changes → Revalidate live site** to refresh the
+3. Review **Testimonial submissions**; publish or reject each pending entry.
+4. Open **Publish changes → Revalidate live site** to refresh the
    Vercel cache immediately.
 
 Pages also refresh on their own every `PORTFOLIO_REVALIDATE_SECONDS` (default

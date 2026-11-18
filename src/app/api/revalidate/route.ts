@@ -28,8 +28,7 @@ export async function POST(request: NextRequest) {
       ? body.paths.filter((path): path is string => typeof path === 'string')
       : ['/'];
 
-  revalidateTag('portfolio', 'max');
-  revalidateTag('guestbook', 'max');
+  revalidateTag('portfolio', { expire: 0 });
 
   const localizedPaths = new Set<string>();
 

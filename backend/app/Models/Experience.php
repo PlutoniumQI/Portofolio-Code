@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasTranslations;
+use App\Models\Concerns\RevalidatesFrontend;
 use Database\Factories\ExperienceFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -28,6 +29,7 @@ class Experience extends Model
     use HasFactory;
 
     use HasTranslations;
+    use RevalidatesFrontend;
 
     public const TYPE_WORK = 'work';
 

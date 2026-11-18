@@ -1,5 +1,5 @@
 import fallbackFile from '@/data/portfolio-fallback.json';
-import type { GuestbookEntry, Locale, Portfolio, Post, Project } from './types';
+import type { Locale, Portfolio, Post, Project } from './types';
 
 const fallback = fallbackFile as unknown as Record<Locale, Portfolio>;
 
@@ -8,7 +8,7 @@ const apiUrl = (process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? 'http:
   '',
 );
 
-const revalidateSeconds = Number(process.env.PORTFOLIO_REVALIDATE_SECONDS ?? 300);
+const revalidateSeconds = Number(process.env.PORTFOLIO_REVALIDATE_SECONDS ?? 60);
 
 /**
  * During `next build`, use the committed snapshot instead of the API. Vercel
@@ -50,22 +50,11 @@ async function apiFetch<T>(path: string, tags: string[], fallbackValue: T, reval
 export async function getPortfolio(locale: Locale): Promise<Portfolio> {
   const data = await apiFetch<Portfolio>(
     `/api/portfolio?locale=${locale}`,
-    ['portfolio', `portfolio-${locale}`],
+    ['portfolio'],
     fallback[locale],
   );
 
   return data?.profile ? { ...data, locale } : fallback[locale];
-}
-
-export async function getGuestbook(): Promise<GuestbookEntry[]> {
-  const data = await apiFetch<{ data: GuestbookEntry[] }>(
-    '/api/guestbook',
-    ['guestbook'],
-    { data: [] },
-    60,
-  );
-
-  return data?.data ?? [];
 }
 
 export function findProject(portfolio: Portfolio, slug: string): Project | undefined {

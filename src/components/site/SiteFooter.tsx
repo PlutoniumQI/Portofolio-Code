@@ -90,7 +90,6 @@ export function SiteFooter({
                 ['testimonials', '/testimonials'],
                 ['blog', '/blog'],
                 ['cv', '/cv'],
-                ['guestbook', '/guestbook'],
               ].map(([key, href]) => (
                 <li key={key}>
                   <Link

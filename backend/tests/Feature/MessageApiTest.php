@@ -30,30 +30,20 @@ class MessageApiTest extends TestCase
         $this->assertTrue($message->is_approved);
     }
 
-    public function test_guestbook_entries_need_approval_before_they_are_public(): void
+    public function test_the_retired_guestbook_endpoint_is_gone(): void
     {
+        $this->getJson('/api/guestbook')->assertNotFound();
+
+        // A stale client cannot smuggle a guestbook entry through the contact
+        // endpoint: the server always stores the contact type.
         $this->postJson('/api/messages', [
-            'type' => Message::TYPE_GUESTBOOK,
+            'type' => 'guestbook',
             'name' => 'Nabila Putri',
             'email' => 'nabila@example.com',
             'message' => 'Good luck with the portfolio and the UKK!',
         ])->assertCreated();
 
-        $message = Message::query()->sole();
-
-        $this->assertFalse($message->is_approved);
-
-        $this->getJson('/api/guestbook')
-            ->assertOk()
-            ->assertJsonCount(0, 'data');
-
-        $message->update(['is_approved' => true]);
-
-        $this->getJson('/api/guestbook')
-            ->assertOk()
-            ->assertJsonCount(1, 'data')
-            ->assertJsonPath('data.0.name', 'Nabila Putri')
-            ->assertJsonPath('meta.total', 1);
+        $this->assertSame(Message::TYPE_CONTACT, Message::query()->sole()->type);
     }
 
     public function test_contact_details_are_validated(): void

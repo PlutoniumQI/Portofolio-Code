@@ -1,5 +1,5 @@
 export interface MessagePayload {
-  type: 'contact' | 'guestbook';
+  type: 'contact';
   name: string;
   email: string;
   subject?: string;

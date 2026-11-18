@@ -42,7 +42,11 @@ RUN composer install \
     --prefer-dist
 
 COPY . .
-RUN mkdir -p \
+# Never trust caches copied from the workstation. A packages.php generated with
+# dev dependencies references providers such as laravel/pail that do not exist
+# after `composer install --no-dev`.
+RUN rm -rf bootstrap/cache/*.php bootstrap/cache/filament \
+    && mkdir -p \
         bootstrap/cache \
         storage/app/public \
         storage/framework/cache/data \

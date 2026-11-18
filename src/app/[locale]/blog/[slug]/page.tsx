@@ -6,7 +6,7 @@ import { JsonLd } from '@/components/ui/JsonLd';
 import { PostCard } from '@/components/ui/PostCard';
 import { Prose } from '@/components/ui/Prose';
 import { Container, Section, SectionHeading } from '@/components/ui/Section';
-import { findPost, getPortfolio, getSiteUrl } from '@/lib/api';
+import { decodeSlug, findPost, getPortfolio, getSiteUrl } from '@/lib/api';
 import { getDictionary } from '@/lib/dictionaries';
 import { formatDate, isLocale, localePath } from '@/lib/i18n';
 import type { Locale } from '@/lib/types';
@@ -16,7 +16,8 @@ export async function generateMetadata({
 }: {
   params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
-  const { locale, slug } = await params;
+  const { locale, slug: rawSlug } = await params;
+  const slug = decodeSlug(rawSlug);
 
   if (!isLocale(locale)) {
     return {};
@@ -60,7 +61,8 @@ export default async function BlogPostPage({
 }: {
   params: Promise<{ locale: string; slug: string }>;
 }) {
-  const { locale: rawLocale, slug } = await params;
+  const { locale: rawLocale, slug: rawSlug } = await params;
+  const slug = decodeSlug(rawSlug);
 
   if (!isLocale(rawLocale)) {
     notFound();

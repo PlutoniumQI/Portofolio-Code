@@ -18,7 +18,7 @@ export function ProjectCard({
 }) {
   return (
     <Link
-      href={localePath(locale, `/projects/${project.slug}`)}
+      href={localePath(locale, `/projects/${encodeURIComponent(project.slug)}`)}
       className="project-card-glow group flex flex-col overflow-hidden rounded-2xl border border-line bg-elevated/70 transition-all duration-300 hover:-translate-y-1 hover:border-accent-line"
     >
       <div className="relative aspect-[16/10] overflow-hidden border-b border-line">

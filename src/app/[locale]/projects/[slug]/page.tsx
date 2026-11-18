@@ -8,7 +8,7 @@ import { Prose } from '@/components/ui/Prose';
 import { ProjectCard } from '@/components/ui/ProjectCard';
 import { ProjectCover } from '@/components/ui/ProjectArtwork';
 import { Container, Section, SectionHeading } from '@/components/ui/Section';
-import { findProject, getPortfolio, getSiteUrl } from '@/lib/api';
+import { decodeSlug, findProject, getPortfolio, getSiteUrl } from '@/lib/api';
 import { getDictionary } from '@/lib/dictionaries';
 import { formatDate, isLocale, localePath } from '@/lib/i18n';
 import type { Locale } from '@/lib/types';
@@ -18,7 +18,8 @@ export async function generateMetadata({
 }: {
   params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
-  const { locale, slug } = await params;
+  const { locale, slug: rawSlug } = await params;
+  const slug = decodeSlug(rawSlug);
 
   if (!isLocale(locale)) {
     return {};
@@ -61,7 +62,8 @@ export default async function ProjectDetailPage({
 }: {
   params: Promise<{ locale: string; slug: string }>;
 }) {
-  const { locale: rawLocale, slug } = await params;
+  const { locale: rawLocale, slug: rawSlug } = await params;
+  const slug = decodeSlug(rawSlug);
 
   if (!isLocale(rawLocale)) {
     notFound();

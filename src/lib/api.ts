@@ -61,6 +61,18 @@ export function findProject(portfolio: Portfolio, slug: string): Project | undef
   return portfolio.projects.find((project) => project.slug === slug);
 }
 
+/**
+ * Route params arrive URL-encoded, so a legacy slug stored with spaces or
+ * capitals ("Exam Platform") would never match the API payload. Decode first.
+ */
+export function decodeSlug(value: string): string {
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
+}
+
 export function findPost(portfolio: Portfolio, slug: string): Post | undefined {
   return portfolio.posts.find((post) => post.slug === slug);
 }

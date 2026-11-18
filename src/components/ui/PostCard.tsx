@@ -15,7 +15,7 @@ export function PostCard({
 }) {
   return (
     <Link
-      href={localePath(locale, `/blog/${post.slug}`)}
+      href={localePath(locale, `/blog/${encodeURIComponent(post.slug)}`)}
       className="group flex flex-col overflow-hidden rounded-2xl border border-line bg-elevated/70 transition-all duration-300 hover:-translate-y-1 hover:border-accent-line"
     >
       <div className="relative aspect-[16/9] overflow-hidden border-b border-line">

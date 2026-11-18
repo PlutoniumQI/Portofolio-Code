@@ -100,7 +100,11 @@ export default async function CvPage({ params }: { params: Promise<{ locale: str
             <div className="no-print flex shrink-0 flex-wrap gap-2">
               <PrintButton label={dictionary.cv.print} />
               {profile.cv_url && (
-                <a href={profile.cv_url} target="_blank" rel="noreferrer noopener" className="btn-ghost">
+                <a
+                  href={`/api/cv?locale=${locale}`}
+                  download
+                  className="btn-ghost"
+                >
                   <Icon name="download" size={14} />
                   {dictionary.cv.download}
                 </a>

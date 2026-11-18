@@ -821,6 +821,7 @@ body::after {
   #glow,
   #navbar,
   #backToTop,
+  .skip-link,
   footer,
   .no-print {
     display: none !important;
@@ -848,4 +849,9 @@ body::after {
     color: inherit !important;
     text-decoration: none !important;
   }
+}
+
+/* The CV page is a print artifact: hide the keyboard skip link there. */
+body:has(.print-page) .skip-link {
+  display: none;
 }

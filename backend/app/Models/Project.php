@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasTranslations;
+use App\Models\Concerns\RevalidatesFrontend;
 use App\Support\Media;
 use Database\Factories\ProjectFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -38,6 +39,7 @@ class Project extends Model
     use HasFactory;
 
     use HasTranslations;
+    use RevalidatesFrontend;
 
     public const STATUS_DRAFT = 'draft';
 
@@ -92,9 +94,9 @@ class Project extends Model
     {
         return collect($this->gallery ?? [])
             ->map(function (mixed $path): ?string {
-                // Filament's simple repeater stores each row as ['url' => '...'].
-                // Older seeds and the legacy export use plain strings, so accept
-                // both shapes and never let one malformed row break the API.
+                // Older uploads stored each row as ['url' => '...']. Seeds and
+                // the legacy export use plain strings, so accept both shapes and
+                // never let one malformed row break the API.
                 if (is_array($path)) {
                     $path = $path['url'] ?? null;
                 }

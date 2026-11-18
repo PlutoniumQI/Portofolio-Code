@@ -1,4 +1,4 @@
-# Production image for the Laravel + Filament backend on Vercel.
+# Production image for the Laravel backend on Vercel.
 #
 # Vercel builds this file as an OCI image, runs it as a request-driven
 # Function, and routes traffic through Caddy to public/index.php. The container
@@ -45,7 +45,7 @@ COPY . .
 # Never trust caches copied from the workstation. A packages.php generated with
 # dev dependencies references providers such as laravel/pail that do not exist
 # after `composer install --no-dev`.
-RUN rm -rf bootstrap/cache/*.php bootstrap/cache/filament \
+RUN rm -rf bootstrap/cache/*.php \
     && mkdir -p \
         bootstrap/cache \
         storage/app/public \
@@ -57,8 +57,8 @@ RUN rm -rf bootstrap/cache/*.php bootstrap/cache/filament \
     && composer dump-autoload --optimize --no-dev --no-scripts
 
 # Final image. Build-time caches must not depend on runtime environment
-# variables, so config is intentionally left uncached. Filament assets and
-# compiled Blade views are immutable, so they are safe to bake in.
+# variables, so config is intentionally left uncached. Compiled Blade views are
+# immutable, so they are safe to bake in.
 FROM base AS runtime
 
 COPY --from=dependencies --chown=www-data:www-data /app /app
@@ -66,10 +66,6 @@ COPY --chown=www-data:www-data Caddyfile /etc/frankenphp/Caddyfile
 
 RUN APP_KEY=base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA= \
         php artisan package:discover --ansi \
-    && APP_KEY=base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA= \
-        php artisan filament:assets --ansi \
-    && APP_KEY=base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA= \
-        php artisan filament:optimize --ansi \
     && APP_KEY=base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA= \
         php artisan view:cache --ansi \
     && chown -R www-data:www-data storage bootstrap/cache public

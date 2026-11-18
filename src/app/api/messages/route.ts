@@ -1,9 +1,9 @@
 import type { NextRequest } from 'next/server';
 
 /**
- * Same-origin proxy for contact/guestbook submissions. Browsers never call the
- * Laravel API directly, so the frontend does not depend on CORS and does not
- * need a public API URL baked in at build time.
+ * Same-origin proxy for contact submissions. Browsers never call the Laravel
+ * API directly, so the frontend does not depend on CORS and does not need a
+ * public API URL baked in at build time.
  */
 const apiUrl = (process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? 'http://127.0.0.1:8000').replace(
   /\/+$/,

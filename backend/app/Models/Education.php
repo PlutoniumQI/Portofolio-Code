@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasTranslations;
+use App\Models\Concerns\RevalidatesFrontend;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 
@@ -22,6 +23,7 @@ use Illuminate\Database\Eloquent\Model;
 class Education extends Model
 {
     use HasTranslations;
+    use RevalidatesFrontend;
 
     /**
      * Laravel's inflector treats "education" as uncountable, so the table has

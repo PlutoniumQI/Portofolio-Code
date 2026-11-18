@@ -28,7 +28,6 @@ const secondaryNav: NavItem[] = [
   { key: 'certificates', href: '/certificates' },
   { key: 'testimonials', href: '/testimonials' },
   { key: 'cv', href: '/cv' },
-  { key: 'guestbook', href: '/guestbook' },
 ];
 
 export function SiteHeader({ locale, dictionary }: { locale: Locale; dictionary: Dictionary }) {

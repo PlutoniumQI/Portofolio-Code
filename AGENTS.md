@@ -12,15 +12,16 @@ This repo contains two apps:
 
 - **`/` (Next.js 16, App Router)** — the public bilingual site. Deployed to Vercel Hobby at the
   user's domain. Routes are locale-prefixed (`/id/...`, `/en/...`); `/` redirects to `/id`.
-- **`backend/` (Laravel 13 + Filament 5)** — the admin and public API. Local development uses SQLite
-  and the public disk; production runs on **Vercel Containers** at `api.<domain>`, with **Neon
-  Postgres** and media served from public URLs.
+- **`backend/` (Laravel 13, Blade admin — Filament was removed)** — the admin and public API. Local
+  development uses SQLite and the public disk; production runs on **Vercel Containers** at
+  `api.<domain>`, with **Neon Postgres** and media served from public URLs.
 
 Content flow:
 
 ```text
-Filament edit -> Neon Postgres -> GET /api/portfolio -> Next.js ISR -> Vercel
+admin edit    -> Neon Postgres -> GET /api/portfolio -> Next.js ISR -> Vercel
 media URL     -> raw.githubusercontent.com (pasted in the admin, no upload step)
+testimonial   -> POST /api/testimonials -> pending row -> admin publishes
 Publish       -> POST /api/revalidate on Vercel
 ```
 
@@ -31,7 +32,10 @@ the retired one-page app. Do not restore them or the Contentful integration.
 ## Infrastructure files
 
 - `backend/Dockerfile.vercel` — Vercel Container image (FrankenPHP 8.4); installs `intl`, `zip`, and
-  `pdo_pgsql`, publishes Filament assets, and precompiles Blade views.
+  `pdo_pgsql`, then precompiles Blade views. There is no asset-publish step: the admin CSS/JS in
+  `backend/public/{css,js,vendor,fonts}` is committed to the repo.
+- `backend/config/admin.php` — the admin resource definitions. One cached array drives the sidebar,
+  list columns, forms, validation rules, and reordering for every resource.
 - `backend/Caddyfile` — listens on `$PORT`, serves `backend/public`, and routes requests to
   `index.php`.
 - `backend/vercel.json` — pins the Vercel framework to `container` so detection never picks the
@@ -40,8 +44,16 @@ the retired one-page app. Do not restore them or the Contentful integration.
   files, and build artifacts.
 - `backend/config/cors.php` — allows only `FRONTEND_ALLOWED_ORIGINS`.
 - `backend/config/portfolio.php` — export/fallback paths and the frontend revalidation URL and secret.
-- `backend/routes/api.php` — public API: `health`, `portfolio`, `projects`, `posts`, `guestbook`,
-  `messages`.
+- `backend/routes/web.php` — admin panel: dashboard, auth, per-resource CRUD + reorder, messages,
+  testimonial submissions, site profile, account, publish.
+- `backend/routes/api.php` — public API: `health`, `portfolio`, `projects`, `posts`, `messages`,
+  `testimonials`.
+- `backend/app/Http/Controllers/Admin/ResourceController.php` — generic admin CRUD. Resource routes
+  carry a `resource` *default*, so controller arguments must be read by name via
+  `$request->route('resource')` / `$request->route('record')`; positional injection silently swaps
+  them.
+- `backend/resources/views/admin/*` — the admin Blade views (`layout`, `resources/*`, `messages/*`,
+  `submissions/*`, `profile`, `publish`, `auth/login`).
 - `backend/.env.production.example` — production env reference. Real secrets live only in Vercel.
 - `.env.example` — frontend env reference: `NEXT_PUBLIC_SITE_URL`, `API_URL`,
   `FRONTEND_REVALIDATE_SECRET`, `PORTFOLIO_REVALIDATE_SECONDS`.
@@ -50,8 +62,8 @@ the retired one-page app. Do not restore them or the Contentful integration.
 
 ## Source of truth and generated files
 
-- Edit all content in the Filament admin (`http://127.0.0.1:8000/admin` locally,
-  `https://api.<domain>/admin` in production), never in JSON.
+- Edit all content in the admin (`http://127.0.0.1:8000/admin` locally, `https://api.<domain>/admin`
+  in production), never in JSON.
 - `src/data/portfolio-fallback.json` is **generated** by `php artisan portfolio:fallback`
   (`npm run fallback`). It is a bilingual snapshot used during `next build` and when the API is
   unreachable. Do not hand-edit it; regenerate it after changing seed content.
@@ -62,8 +74,8 @@ the retired one-page app. Do not restore them or the Contentful integration.
 - If a content field changes, update all affected layers together:
   1. `backend/database/migrations/*`
   2. `backend/app/Models/*`
-  3. `backend/app/Filament/Resources/.../Schemas/*Form.php`
-  4. `backend/app/Filament/Resources/.../Tables/*Table.php`
+  3. `backend/config/admin.php` (columns, form fields, rules, options)
+  4. `backend/resources/views/admin/partials/field.blade.php` if a new input type is needed
   5. `backend/app/Services/PortfolioService.php` (API payload)
   6. `backend/app/Console/Commands/ExportPortfolioFallback.php` output stays compatible
   7. `src/lib/types.ts`
@@ -109,7 +121,7 @@ point at the full Herd build. For direct commands, prefix PATH:
 $env:PATH = 'C:\Users\YOGA\.config\herd\bin\php85;' + $env:PATH
 ```
 
-Without that, Filament tables fail with `The "intl" PHP extension is required to use the [format] method.`
+Without that, the admin pages fail with `The "intl" PHP extension is required to use the [format] method.`
 
 ## Backend rules
 
@@ -123,20 +135,25 @@ Without that, Filament tables fail with `The "intl" PHP extension is required to
 - Migrations and seeding are a one-off command from a workstation
   (`php artisan migrate --seed --force`). Never run them at container startup: Vercel can start
   several instances concurrently. Seeders must stay idempotent.
-- Filament assets are git-ignored and published at image build time by `backend/Dockerfile.vercel`.
+- The admin assets in `backend/public/{css,js,vendor,fonts}` are committed (no Filament asset publish
+  step). `backend/public/admin.css` and `backend/public/admin.js` are the only files to edit for admin
+  styling and behaviour.
 - The admin login is seeded once from `ADMIN_EMAIL` / `ADMIN_PASSWORD`. Changing those env vars later
-  does not change an existing password; use the Filament profile page.
+  does not change an existing password; use the **Account** page (`/admin/profile`).
+- Any route that adds an administrator needs `users.is_admin`; `EnsureUserIsAdmin` logs non-admins out.
 - CORS is restricted to `FRONTEND_ALLOWED_ORIGINS`. Do not use `*` in production. The Next.js form
   proxy means browsers do not need CORS, but direct calls still do.
 - Project statuses: `draft` (not exposed by the API), `published`, `coming_soon` (exposed with a
   badge). Inactive experiences are not exposed.
-- `sort_order` is the display order and is drag-reorderable in the Filament tables.
-- **Settings → Publish changes** calls the revalidator (`FrontendRevalidator`), which posts to
+- `sort_order` is the display order and is drag-reorderable on any resource whose
+  `backend/config/admin.php` entry sets `reorder => true`.
+- **Publish changes** calls the revalidator (`FrontendRevalidator`), which posts to
   `FRONTEND_REVALIDATE_URL` with `FRONTEND_REVALIDATE_SECRET`.
-- Guestbook entries are hidden from `GET /api/guestbook` until `is_approved` is true. Approve them
-  from **Messages & guestbook**.
-- `POST /api/messages` is throttled to 5 requests per minute per IP and has a honeypot. Do not remove
-  either.
+- Testimonial submissions are private until an admin publishes them; publishing or rejecting them
+  happens in **Testimonial submissions**. There is no public read endpoint for pending entries (the
+  old guestbook page, API route, and controller were removed — do not reintroduce them).
+- `POST /api/messages` and `POST /api/testimonials` are throttled to 5 requests per minute per IP and
+  have a honeypot. Do not remove either.
 - Do not add startup scripts, queue workers, or persistent-disk assumptions to the backend. The
   container filesystem is ephemeral; content, sessions, and cache live in Postgres.
 
@@ -208,7 +225,9 @@ After a production build, verify with `npm run start`:
 - `/id/projects/<slug>` and `/id/blog/<slug>` return 200 for seeded content.
 - Unknown project/blog slugs return **404**, not 200.
 - `/` returns a 307 redirect to `/id`; `/fr` returns 404.
-- Contact and guestbook posts succeed through `http://127.0.0.1:3000/api/messages`.
+- Contact posts succeed through `http://127.0.0.1:3000/api/messages`, testimonial submissions through
+  `http://127.0.0.1:3000/api/testimonials`, and the submission shows up as pending in
+  `/admin/testimonial-submissions`.
 - `POST /api/revalidate` returns 401 without the secret and 200 with it.
 
 After a backend deploy, verify `https://api.<domain>/up` and `https://api.<domain>/api/health`.
@@ -231,8 +250,8 @@ the legacy export for it.
 - Neon may suspend compute when idle. Use the **direct** connection string and `DB_SSLMODE=require`.
 - `APP_KEY` must be a valid `base64:` value. Changing it invalidates sessions and encrypted data.
 - Delete old Vercel deployments occasionally so Container Registry storage does not grow.
-- Deleting a project or post in Filament does not delete its image from the media repository; remove
-  orphaned files manually if needed.
+- Deleting a project or post in the admin does not delete its image from the media repository;
+  remove orphaned files manually if needed.
 - Next 16: `revalidateTag(tag, 'max')` takes two arguments. If stale `.next/types` errors appear,
   delete `.next` before `tsc`.
 - PowerShell treats `src\app\[locale]\...` as a wildcard; use `-LiteralPath` (or quote with care).

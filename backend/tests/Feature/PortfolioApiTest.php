@@ -102,7 +102,7 @@ class PortfolioApiTest extends TestCase
         $this->getJson('/api/projects/exam-platform')->assertNotFound();
     }
 
-    public function test_the_project_gallery_accepts_filament_repeater_rows(): void
+    public function test_the_project_gallery_accepts_legacy_repeater_rows(): void
     {
         Project::query()->where('slug', 'exam-platform')->update([
             'gallery' => [

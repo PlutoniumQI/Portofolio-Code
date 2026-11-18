@@ -11,15 +11,13 @@ class MessageController extends Controller
 {
     public function store(StoreMessageRequest $request): JsonResponse
     {
-        $type = $request->input('type', Message::TYPE_CONTACT);
-
         // Honeypot: accept silently so bots do not learn that they were caught.
         if (filled($request->input('website'))) {
-            return $this->success($type);
+            return $this->success();
         }
 
         Message::create([
-            'type' => $type,
+            'type' => Message::TYPE_CONTACT,
             'name' => $request->string('name')->trim()->toString(),
             'email' => $request->string('email')->trim()->toString(),
             'subject' => $request->filled('subject')
@@ -27,23 +25,19 @@ class MessageController extends Controller
                 : null,
             'message' => $request->string('message')->trim()->toString(),
             'is_read' => false,
-            'is_approved' => $type === Message::TYPE_CONTACT,
+            'is_approved' => true,
             'ip_address' => $request->ip(),
             'user_agent' => mb_substr((string) $request->userAgent(), 0, 1000),
         ]);
 
-        return $this->success($type);
+        return $this->success();
     }
 
-    private function success(string $type): JsonResponse
+    private function success(): JsonResponse
     {
-        $guestbook = $type === Message::TYPE_GUESTBOOK;
-
         return response()->json([
-            'message' => $guestbook
-                ? 'Thanks! Your guestbook entry will appear after approval.'
-                : 'Thanks! Your message has been sent.',
-            'type' => $type,
+            'message' => 'Thanks! Your message has been sent.',
+            'type' => Message::TYPE_CONTACT,
         ], 201);
     }
 }

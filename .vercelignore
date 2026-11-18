@@ -8,8 +8,5 @@ backend/storage
 backend/database/*.sqlite
 backend/.env*
 backend/.vercel
-backend/public/css/filament
-backend/public/js/filament
-backend/public/fonts/filament
 backend/public/hot
 backend/public/storage

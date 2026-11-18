@@ -151,17 +151,3 @@ export interface Portfolio {
   testimonial_categories: CategoryOption[];
   posts: Post[];
 }
-
-export interface GuestbookEntry {
-  id: string;
-  name: string;
-  message: string;
-  created_at: string | null;
-}
-
-export interface GuestbookResponse {
-  data: GuestbookEntry[];
-  meta: {
-    total: number;
-  };
-}

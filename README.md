@@ -1,7 +1,7 @@
 # re:SKY — Portfolio
 
-Bilingual personal portfolio for Muhammad Resky Ramadhan. A Next.js 16 frontend, a Laravel 13 +
-Filament 5 admin and API, deployed for free on Vercel + Vercel Containers + Neon.
+Bilingual personal portfolio for Muhammad Resky Ramadhan. A Next.js 16 frontend, a Laravel 13
+Blade admin and API, deployed for free on Vercel + Vercel Containers + Neon.
 
 > **Status:** the API-backed bilingual frontend and the Vercel container backend are built; lint,
 > type-check, tests, and the production build pass. What remains is deployment — Neon, the Vercel
@@ -13,14 +13,14 @@ Filament 5 admin and API, deployed for free on Vercel + Vercel Containers + Neon
 | Layer | Technology | Host |
 |---|---|---|
 | Frontend | Next.js 16 (App Router), Tailwind CSS v4 | Vercel Hobby |
-| Admin + API | Laravel 13, Filament 5 | Vercel Containers (Hobby) |
+| Admin + API | Laravel 13 (Blade admin, no Filament) | Vercel Containers (Hobby) |
 | Database | PostgreSQL | Neon Free |
 | Images / PDFs | Public URLs | GitHub raw URLs |
 
 Content flow:
 
 ```text
-Filament edit -> Neon Postgres -> GET /api/portfolio -> Next.js ISR -> Vercel
+Admin edit  -> Neon Postgres -> GET /api/portfolio -> Next.js ISR -> Vercel
 media URL     -> raw.githubusercontent.com (pasted in the admin, no upload step)
 Publish       -> POST /api/revalidate on Vercel
 ```
@@ -46,7 +46,6 @@ Routes are locale-prefixed with `id` and `en`. `/` redirects to `/id`; unknown l
 | `/[locale]/blog/[slug]` | Post detail |
 | `/[locale]/cv` | Digital CV, printable |
 | `/[locale]/contact` | Contact form, email, LinkedIn, socials |
-| `/[locale]/guestbook` | Approved guestbook entries + submission form |
 
 Light/dark mode, language switching, back-to-top, and reduced-motion support work across all pages.
 
@@ -55,11 +54,13 @@ Light/dark mode, language switching, back-to-top, and reduced-motion support wor
 ```text
 src/app/[locale]/            localized pages (root layout lives here)
 src/app/api/revalidate/      webhook that refreshes ISR tags
-src/app/api/messages/        same-origin proxy for contact/guestbook posts
+src/app/api/messages/        same-origin proxy for contact posts
+src/app/api/testimonials/    same-origin proxy for testimonial submissions
 src/components/              site shell, UI primitives, explorers, forms
 src/lib/                     API client, dictionaries, types, i18n helpers
 src/data/portfolio-fallback.json   committed bilingual snapshot for builds/offline
-backend/                     Laravel 13 + Filament 5 admin and API
+backend/                     Laravel 13 admin (Blade) and public API
+backend/config/admin.php     admin resource definitions (fields, columns, rules)
 backend/Dockerfile.vercel    Vercel container image (FrankenPHP + Caddy)
 backend/Caddyfile            serves backend/public on Vercel's $PORT
 backend/vercel.json          pins the Vercel framework to "container"
@@ -128,7 +129,9 @@ Live content is fetched on the first revalidation after deployment.
 
 ## Editing content
 
-Everything is edited in Filament; no code or redeploy is needed.
+Everything is edited in the admin at `/admin` (locally <http://127.0.0.1:8000/admin>); no code or
+redeploy is needed. The admin is plain Laravel + Blade driven by
+`backend/config/admin.php`: adding a field means editing that array, the model, and the migration.
 
 - **Projects** — status `draft` / `published` / `coming_soon`, rich process story, gallery, links,
   searchable tags. Drag rows to reorder.
@@ -138,21 +141,22 @@ Everything is edited in Filament; no code or redeploy is needed.
 - **Education, Certificates, Testimonials** — bilingual forms; testimonial type is `client`,
   `mentor`, `teacher`, or `peer`.
 - **Profile & CV** — name, roles, bio, contact details, socials, CV summary and download.
-- **Messages & guestbook** — contact submissions and guestbook entries. Guestbook entries stay
-  hidden until **Approve** is toggled.
+- **Messages** — contact form submissions, markable as read.
+- **Testimonial submissions** — public submissions from the site. They stay pending until an admin
+  **publishes** or **rejects** them; publishing creates a testimonial entry.
 
-Bilingual fields use `_id` / `_en` tabs. English falls back to Indonesian when a translation is
-empty.
+Bilingual fields are labelled `(ID)` / `(EN)`. English falls back to Indonesian when a translation
+is empty.
 
-After editing, open **Settings → Publish changes** and click **Revalidate live site**. In production
+After editing, open **Publish changes** and click **Revalidate live site**. In production
 that calls `POST /api/revalidate` on Vercel. Locally, leave `FRONTEND_REVALIDATE_URL` and
 `FRONTEND_REVALIDATE_SECRET` empty in `backend/.env`; pages refresh on their own ISR schedule
 (`PORTFOLIO_REVALIDATE_SECONDS`, default 300).
 
 ## Images and files
 
-Media is **URL-only**. The Filament forms have no upload fields; paste a public image or PDF URL
-into the cover, gallery, certificate, avatar, blog cover, or CV field.
+Media is **URL-only**. The admin forms have no upload fields; paste a public image or PDF URL into
+the cover, gallery, certificate, avatar, blog cover, or CV field.
 
 - Use the **raw** form `https://raw.githubusercontent.com/<user>/<repo>/<branch>/<path>` — not a
   `github.com/.../blob/...` page, and not a private repo.
@@ -164,12 +168,13 @@ into the cover, gallery, certificate, avatar, blog cover, or CV field.
 
 ## Forms
 
-Contact and guestbook submissions post to the frontend's own `POST /api/messages` route. That route
-forwards to Laravel server-side using `API_URL`, so the browser never needs CORS or a public API
-URL. Both forms validate client-side, include a honeypot, and show localized success/error messages.
+Contact messages post to the frontend's own `POST /api/messages` route; testimonials post to
+`POST /api/testimonials`. Both routes forward to Laravel server-side using `API_URL`, so the browser
+never needs CORS or a public API URL. Both forms validate client-side, include a honeypot, and show
+localized success/error messages.
 
-Guestbook entries are only returned by `GET /api/guestbook` after approval. Messages are throttled
-to 5 requests per minute per IP.
+Testimonial submissions are never public: they land as pending rows in the admin until an admin
+publishes them. Both POST endpoints are throttled to 5 requests per minute per IP.
 
 ## API
 
@@ -181,8 +186,8 @@ GET  /api/projects               search with q, filter by category/featured
 GET  /api/projects/{slug}        project detail
 GET  /api/posts                  published posts only
 GET  /api/posts/{slug}           post detail
-GET  /api/guestbook              approved guestbook entries only
-POST /api/messages               contact/guestbook submission
+POST /api/messages               contact submission (throttled, honeypot)
+POST /api/testimonials           testimonial submission -> pending admin review
 ```
 
 CORS is restricted to `FRONTEND_ALLOWED_ORIGINS` (`backend/config/cors.php`). The Next.js form proxy

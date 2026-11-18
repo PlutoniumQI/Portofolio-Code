@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasTranslations;
+use App\Models\Concerns\RevalidatesFrontend;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,6 +20,7 @@ use Illuminate\Database\Eloquent\Model;
 class Skill extends Model
 {
     use HasTranslations;
+    use RevalidatesFrontend;
 
     public const CATEGORY_HARD = 'hard';
 

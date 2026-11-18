@@ -499,9 +499,12 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                   {dictionary.common.contactMe}
                   <Icon name="send" size={14} />
                 </Link>
-                <Link href={localePath(locale, '/guestbook')} className="btn-ghost">
-                  {dictionary.guestbook.title}
-                  <Icon name="message" size={14} />
+                <Link
+                  href={`${localePath(locale, '/testimonials')}#write`}
+                  className="btn-ghost"
+                >
+                  {dictionary.testimonials.write.cta}
+                  <Icon name="quote" size={14} />
                 </Link>
               </div>
             </div>

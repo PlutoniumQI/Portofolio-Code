@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasTranslations;
+use App\Models\Concerns\RevalidatesFrontend;
 use App\Support\Media;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
@@ -26,6 +27,7 @@ use Illuminate\Database\Eloquent\Model;
 class Certificate extends Model
 {
     use HasTranslations;
+    use RevalidatesFrontend;
 
     public function imageUrl(): ?string
     {

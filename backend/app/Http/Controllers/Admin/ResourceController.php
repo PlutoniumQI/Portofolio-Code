@@ -74,6 +74,7 @@ class ResourceController extends Controller
 
         $fields = $this->allFields($definition['groups']);
         $this->mergeCheckboxes($request, $fields);
+        $this->normalizeSlugInput($request, $fields);
         $validated = $request->validate($this->fieldRules($fields));
 
         $record = $model->newInstance();
@@ -110,6 +111,7 @@ class ResourceController extends Controller
         $found = $model->newQuery()->findOrFail($this->recordId($request));
         $fields = $this->allFields($definition['groups']);
         $this->mergeCheckboxes($request, $fields);
+        $this->normalizeSlugInput($request, $fields);
         $validated = $request->validate($this->fieldRules($fields, $found));
 
         $found->fill($this->normalizeFields($fields, $validated));

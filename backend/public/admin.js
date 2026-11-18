@@ -116,6 +116,34 @@
     render();
   });
 
+  /* Slug inputs --------------------------------------------------------- */
+  const softSlug = (value) =>
+    value
+      .toLowerCase()
+      .normalize('NFKD')
+      .replace(/[^a-z0-9-]+/g, '-')
+      .replace(/-{2,}/g, '-');
+
+  const slugify = (value) => softSlug(value).replace(/^-+|-+$/g, '');
+
+  document.querySelectorAll('[data-slug]').forEach((input) => {
+    const apply = (fn) => () => {
+      const next = fn(input.value);
+
+      if (input.value !== next) {
+        input.value = next;
+      }
+    };
+
+    // Lenient while typing so a trailing hyphen can still be entered.
+    input.addEventListener('input', apply(softSlug));
+    // Strict on blur/submit: guards against a title pasted or browser-autofilled
+    // into the slug field, which would otherwise produce an unreachable URL.
+    input.addEventListener('blur', apply(slugify));
+    input.closest('form')?.addEventListener('submit', apply(slugify));
+    apply(slugify)();
+  });
+
   /* Drag-and-drop ordering --------------------------------------------- */
   document.querySelectorAll('[data-sortable]').forEach((tbody) => {
     const table = tbody.closest('table');

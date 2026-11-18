@@ -104,6 +104,7 @@
                 name="{{ $name }}"
                 value="{{ $value }}"
                 placeholder="{{ $field['placeholder'] ?? '' }}"
+                @if ($type === 'slug') pattern="[a-z0-9]+(-[a-z0-9]+)*" autocomplete="off" spellcheck="false" data-slug @endif
                 @if ($inputType === 'number') step="1" @endif
             >
         @endif

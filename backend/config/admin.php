@@ -55,7 +55,7 @@ return [
                 [
                     'title' => 'Links and classification',
                     'fields' => [
-                        ['name' => 'slug', 'label' => 'Slug', 'type' => 'text', 'rules' => ['required', 'string', 'max:255', 'unique:projects,slug,{id}'], 'help' => 'Used in /projects/{slug}. Lowercase letters, numbers, and hyphens.'],
+                        ['name' => 'slug', 'label' => 'Slug', 'type' => 'slug', 'rules' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/', 'unique:projects,slug,{id}'], 'help' => 'Used in /projects/{slug}. Lowercase letters, numbers, and hyphens; titles are slugified automatically.'],
                         ['name' => 'category', 'label' => 'Category', 'type' => 'select', 'options' => Project::categories(), 'rules' => ['nullable', 'string']],
                         ['name' => 'url', 'label' => 'Live URL', 'type' => 'url', 'rules' => ['nullable', 'url', 'max:2048']],
                         ['name' => 'repo_url', 'label' => 'Repository URL', 'type' => 'url', 'rules' => ['nullable', 'url', 'max:2048']],
@@ -139,7 +139,7 @@ return [
                 [
                     'title' => 'Post',
                     'fields' => [
-                        ['name' => 'slug', 'label' => 'Slug', 'type' => 'text', 'rules' => ['required', 'string', 'max:255', 'unique:posts,slug,{id}'], 'help' => 'Used in /blog/{slug}.'],
+                        ['name' => 'slug', 'label' => 'Slug', 'type' => 'slug', 'rules' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/', 'unique:posts,slug,{id}'], 'help' => 'Used in /blog/{slug}. Lowercase letters, numbers, and hyphens; titles are slugified automatically.'],
                         ['name' => 'category', 'label' => 'Category', 'type' => 'text', 'rules' => ['nullable', 'string', 'max:255']],
                         ['name' => 'status', 'label' => 'Status', 'type' => 'select', 'options' => Post::statuses(), 'rules' => ['required', 'string']],
                         ['name' => 'published_at', 'label' => 'Publish date', 'type' => 'datetime', 'rules' => ['nullable', 'date'], 'help' => 'Required before a published post appears on the site.'],

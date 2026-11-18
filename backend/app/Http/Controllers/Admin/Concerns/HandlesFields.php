@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Concerns;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 trait HandlesFields
 {
@@ -63,6 +64,29 @@ trait HandlesFields
     }
 
     /**
+     * Slug fields are normalised before validation, so a title pasted or browser-
+     * autofilled into the slug input can never reach the database as-is.
+     *
+     * @param  array<int, array<string, mixed>>  $fields
+     */
+    protected function normalizeSlugInput(Request $request, array $fields): void
+    {
+        foreach ($fields as $field) {
+            if (($field['type'] ?? 'text') !== 'slug') {
+                continue;
+            }
+
+            $value = $request->input($field['name']);
+
+            if (! is_string($value) || trim($value) === '') {
+                continue;
+            }
+
+            $request->merge([$field['name'] => Str::slug($value)]);
+        }
+    }
+
+    /**
      * Convert form strings (tags, gallery rows) into the shapes the models cast.
      *
      * @param  array<int, array<string, mixed>>  $fields
@@ -75,6 +99,10 @@ trait HandlesFields
             $name = $field['name'];
             $type = $field['type'] ?? 'text';
             $value = $data[$name] ?? null;
+
+            if ($type === 'slug' && is_string($value)) {
+                $data[$name] = Str::slug($value);
+            }
 
             if ($type === 'checkbox') {
                 $data[$name] = (bool) $value;

@@ -142,6 +142,12 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                 {dictionary.home.heroSecondary}
                 <Icon name="arrow-up-right" size={14} />
               </Link>
+              {profile.cv_url && (
+                <a href={`/api/cv?locale=${locale}`} download className="btn-ghost">
+                  {dictionary.home.heroCv}
+                  <Icon name="download" size={14} />
+                </a>
+              )}
             </div>
 
             <div className="reveal reveal-delay-3 mt-8 flex flex-wrap items-center gap-4">

@@ -66,6 +66,7 @@ const id = {
     roles: ['Desainer UI/UX', 'Pengembang Front-end', 'Pembuat Design System', 'Pemecah Masalah'],
     heroCta: 'Jelajahi proyek',
     heroSecondary: 'Tentang saya',
+    heroCv: 'Unduh CV',
     scroll: 'Gulir',
     stats: {
       years: 'Tahun belajar',
@@ -398,6 +399,7 @@ const en: Dictionary = {
     roles: ['UI/UX Designer', 'Front-end Developer', 'Design System Builder', 'Problem Solver'],
     heroCta: 'Explore projects',
     heroSecondary: 'About me',
+    heroCv: 'Download CV',
     scroll: 'Scroll',
     stats: {
       years: 'Years learning',

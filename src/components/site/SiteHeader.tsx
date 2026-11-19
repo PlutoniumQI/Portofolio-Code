@@ -78,7 +78,8 @@ export function SiteHeader({ locale, dictionary }: { locale: Locale; dictionary:
   }
 
   return (
-    <header
+    <>
+      <header
       id="navbar"
       className={`sticky top-0 z-50 transition-colors duration-300 ${
         scrolled || open ? 'border-b border-line bg-bg/85 backdrop-blur-xl' : 'border-b border-transparent'
@@ -195,7 +196,10 @@ export function SiteHeader({ locale, dictionary }: { locale: Locale; dictionary:
           </button>
         </div>
       </div>
+      </header>
 
+      {/* Kept outside <header>: the header's backdrop-filter would otherwise become the
+          containing block for this fixed panel and collapse it to the header's height. */}
       <div
         id="mobileMenu"
         className={`fixed inset-x-0 bottom-0 top-[72px] z-40 overflow-y-auto border-t border-line bg-bg/95 backdrop-blur-xl lg:hidden ${
@@ -268,6 +272,6 @@ export function SiteHeader({ locale, dictionary }: { locale: Locale; dictionary:
           </div>
         </div>
       </div>
-    </header>
+    </>
   );
 }

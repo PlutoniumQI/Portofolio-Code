@@ -544,6 +544,13 @@ body::after {
   transform: translateY(0);
 }
 
+/* Never float over the open mobile menu. */
+body:has(#mobileMenu.open) #backToTop {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
 /* ─── ART / PLACEHOLDER COVERS ──────────────────────────────────────────── */
 .art-grid {
   background-image:
